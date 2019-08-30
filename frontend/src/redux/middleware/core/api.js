@@ -1,41 +1,40 @@
 
 import axios from 'axios'
-import { API_REQUEST, apiSuccess, apiError, setError } from '../../actions/api'
+import { API_REQUEST, setResponse, setError } from '../../actions/api'
+import { ENDPOINTS } from './endpoints'
 
 const config = {
-	url: '',
+	url: 'http://localhost:8080/api',
 	token: 'token',
-
 }
-
 
 export const apiMdl = ({ getState, dispatch }) => next => async action => {
+
+	next(action)
 	
 	if (action.type.includes(API_REQUEST)) {
-		// const { error, user: { token } } = getState()
-		const { error } = getState()
-		// const { entity, method, endpointObj: { url, actionType }, params } = action.payload.meta
-		const { entity, method, endpointObj: { actionType }, params } = action.payload.meta
+		const { method, endPoint } = action.payload.meta
 
 		try {
-			const response = await axios({
+			const url = config.url + ENDPOINTS[endPoint]
+
+			const { data } = await axios({
 				method,
-				url: config.url,
+				url,
 				data: action.payload.data,
-				headers: {
-					'auth': config.token
-				},
-				params
+				// headers: {
+				// 	'access-token': config.apiKey,
+				// 	'auth': token
+				// },
+				// params
 			})
-			
-			dispatch(apiSuccess(response.data, entity, actionType))
-			error && dispatch(setError(false, entity))
+			debugger
+
+			dispatch(setResponse(data))
 			
 		} catch (axiosError) {
-			dispatch(apiError(axiosError.response.data.error, entity))
+			dispatch(setError(axiosError.response.data.error, endPoint))
 		}
-		
 	}
-
-	return next(action)
 }
+

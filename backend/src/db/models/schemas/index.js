@@ -2,5 +2,6 @@
 'use strict'
 
 module.exports = {
-    User: require('./user')
+    User: require('./user'),
+    Video: require('./video')
 }

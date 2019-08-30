@@ -1,5 +1,3 @@
-// import { usersMiddleware } from './user'
-// import { eventsMiddleware } from './event'
+import { videoMiddleware } from './video'
 
-// export const appMdl = [usersMiddleware, eventsMiddleware]
-export const appMdl = []
+export const appMdl = [videoMiddleware]

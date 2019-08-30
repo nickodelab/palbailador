@@ -1,23 +1,20 @@
 
-export const API_REQUEST = 'API_REQUEST'
-export const API_SUCCESS = 'API_SUCCESS'
-export const API_ERROR = 'API_ERROR'
-export const SET_ERROR = 'SET_ERROR'
+export const API_REQUEST = `API_REQUEST`
+export const SET_RESPONSE = `SET_RESPONSE`
+export const API_ERROR = `API_ERROR`
+export const SET_ERROR = `SET_ERROR`
 
-export const apiRequest = (body, method, entity, endpointObj) => ({
-        type: `${entity} ${API_REQUEST}`,
-        payload: {
-            data: body,
-            meta: { method, entity, endpointObj }
-        }
+export const apiRequest = (body, method, endPoint) => ({
+    type: `${endPoint} ${API_REQUEST}`,
+    payload: {
+        data: body,
+        meta: { method, endPoint }
+    }
 })
 
-export const apiSuccess = (response, entity, actionType) => ({
-        type: `${entity} ${API_SUCCESS}`,
-        payload: {
-            data: response,
-            meta: { entity, actionType }
-        }
+export const setResponse = (response) => ({
+    type: SET_RESPONSE,
+    payload: response
 })
 
 export const apiError = (error, entity) => ({

@@ -3,19 +3,20 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 // layout elements
-import Filters from './Filters'
-import Results from './Results'
 import MobileMenu from './MobileMenu'
-import UploadButton from '../shared/UploadButton'
+import UploadForm from './UploadForm'
 
-const styles = {}
+const styles = theme => ({
+    upload: {
+        marginTop: theme.spacing(10)
+    }
+})
 
 const Upload = ({ classes }) => <>
-
+    <section className={classes.upload}>
             <MobileMenu />
-            <Filters />
-            <Results />
-            <UploadButton/>
+            <UploadForm />
+    </section>
 
 </>
   
