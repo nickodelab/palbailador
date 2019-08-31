@@ -9,7 +9,8 @@ const styles = {}
 const Player = ({ videoURL }) => 
     <ReactPlayer 
         url={videoURL} 
-        playing 
+        playing
+        controls 
     />
 
   

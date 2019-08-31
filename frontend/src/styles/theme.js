@@ -1,5 +1,5 @@
 
-import { createMuiTheme } from '@material-ui/core/styles'
+import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles'
 
 const RalewayUrl = 'https://fonts.googleapis.com/css?family=Raleway:300,400,500,700&display=swap'
 
@@ -11,7 +11,7 @@ const raleway = {
   src: `url(${RalewayUrl})`
 }
 
-export const theme = createMuiTheme({
+const materialUITheme = createMuiTheme({
     palette: {
         primary: {
             light: '#4ebaaa',
@@ -32,7 +32,7 @@ export const theme = createMuiTheme({
           '"Apple Color Emoji"',
           '"Segoe UI Emoji"',
           '"Segoe UI Symbol"',
-        ].join(','),
+        ].join(',')
     },
     overrides: {
         MuiCssBaseline: {
@@ -42,3 +42,9 @@ export const theme = createMuiTheme({
         },
       }
 })
+
+const themeOptions = {
+  breakpoints: ['sm', 'md', 'lg']
+}
+
+export const theme = responsiveFontSizes(materialUITheme, themeOptions)

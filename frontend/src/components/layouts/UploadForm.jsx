@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react' 
 import { withStyles } from '@material-ui/core/styles'
-import { Typography, Button, TextField } from '@material-ui/core'
+import { Typography, Button, TextField, CircularProgress, CssBaseline } from '@material-ui/core'
 import { connect } from 'react-redux'
 import Select from 'react-select'
 import { withRouter } from 'react-router-dom'
@@ -14,16 +14,19 @@ import Alert from '../shared/Alert'
 
 const styles = {}
 
-const UploadForm = ({ classes, uploadVideo, response, error, history }) => {
+const UploadForm = ({ classes, uploadVideo, error, history }) => {
     const [video, setVideo] = useState(false)
     const [videoURL, setVideoURL] = useState(false)
     const [category, setCategory] = useState(false)
     const [name, setName] = useState(false)
+    const [spinner, setSpinner] = useState(false)
 
     const handleVideo = async (event) => {  
+        setSpinner(true)
         event.preventDefault()
         const videoURL = await firebase.getVideoURL(video)
         setVideoURL(videoURL)
+        setSpinner(false)
     }    
 
     const handleUploadVideo = () => {
@@ -44,12 +47,11 @@ const UploadForm = ({ classes, uploadVideo, response, error, history }) => {
     console.log('category', category)
 
     return <>
-
         {error && <Alert level='error' message={error} />}
 
         <section className={classes.uploadForm}>
-            <Typography>¡Comparte tu figura!</Typography>
-
+            <Typography variant="h1">¡Comparte tu Figura!</Typography>
+            <p>Crea y comparte con el mundo salsero tus propias figuras.</p>
             <form onSubmit={handleVideo}>
                 <input
                     accept="video/*"
@@ -61,6 +63,8 @@ const UploadForm = ({ classes, uploadVideo, response, error, history }) => {
                 <Button variant="raised" type="submit"> Upload </Button>
             </form>
         </section>
+
+        {spinner && <CircularProgress className={classes.progress} />}
 
         {videoURL && <section className={classes.videoPreview}>
             <Player videoURL={videoURL} />
@@ -86,5 +90,5 @@ const UploadForm = ({ classes, uploadVideo, response, error, history }) => {
     </>
 }
 
-const mapStateToProps = ({ response, error }) => ({ response, error })
+const mapStateToProps = ({ error }) => ({ error })
 export default withStyles(styles)(connect(mapStateToProps, { uploadVideo })(withRouter(UploadForm)))

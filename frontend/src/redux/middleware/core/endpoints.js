@@ -1,21 +1,9 @@
  
 import { VIDEO_UPLOAD } from '../../actions/video'
+import { REGISTER_USER, LOG_IN_USER } from '../../actions/user'
 
 export const ENDPOINTS = {
-    LOG_IN_USER: '/login',
+    [LOG_IN_USER]: '/user/login',
+    [REGISTER_USER]: '/user/new',
     [VIDEO_UPLOAD]: '/video/new'
 }
-
-// try {
-// 	const response = await axios({
-// 		method,
-// 		url: `${config.apiUrl}${ENDPOINTS[command]}`,
-// 		data: action.payload.data,
-// 		headers: {
-// 			'access-token': config.apiKey,
-// 			'auth': token
-// 		},
-// 		params
-// 	})
-
-// 	dispatch(apiSuccess(response.data, entity, command))

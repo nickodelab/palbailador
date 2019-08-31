@@ -1,5 +1,4 @@
 
-
 import storage from './storage'
 
 const firebase = {
@@ -9,21 +8,13 @@ const firebase = {
         const storageRef = storage.ref(`videos/${id}`)
         const task = storageRef.put(file)
 
-        // resolve('https://www.youtube.com/watch?v=OygCyVjNo9I' + `${Math.random()}`)
+        // return resolve(`https://firebasestorage.googleapis.com/v0/b/laclave-salsa.appspot.com/o/videos%2F1567249612040?alt=media&token=ab39475c-484c-442c-b9d0-98010a010dc4`)
 
         return task.on('state_changed',
-            snapshot => {
-            },
-            (error) => { 
-                reject('error uploading the image...')
-            },
-
-            () => {
-                return task.snapshot.ref.getDownloadURL()
-                    .then(downloadURL => {
-                        resolve(downloadURL)
-                    })
-            })
+            undefined,
+            (error) => reject('error uploading the image...'),
+            () => task.snapshot.ref.getDownloadURL()
+                    .then(downloadURL => resolve(downloadURL)))
         })
 }
 

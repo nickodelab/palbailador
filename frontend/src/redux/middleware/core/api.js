@@ -28,8 +28,7 @@ export const apiMdl = ({ getState, dispatch }) => next => async action => {
 				// },
 				// params
 			})
-			debugger
-
+			
 			dispatch(setResponse(data))
 			
 		} catch (axiosError) {
@@ -37,4 +36,3 @@ export const apiMdl = ({ getState, dispatch }) => next => async action => {
 		}
 	}
 }
-
