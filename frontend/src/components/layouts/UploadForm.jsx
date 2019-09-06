@@ -31,7 +31,7 @@ const UploadForm = ({ classes, uploadVideo, error, history }) => {
 
     const handleUploadVideo = () => {
         uploadVideo({ name, category, url: videoURL })
-        history.push('/video-create-ok')
+        history.push('/vok')
     }
 
     const options = [
@@ -50,17 +50,43 @@ const UploadForm = ({ classes, uploadVideo, error, history }) => {
         {error && <Alert level='error' message={error} />}
 
         <section className={classes.uploadForm}>
-            <Typography variant="h1">¡Comparte tu Figura!</Typography>
+            <Typography variant="h4">¡Comparte tu Figura!</Typography>
             <p>Crea y comparte con el mundo salsero tus propias figuras.</p>
             <form onSubmit={handleVideo}>
                 <input
+                    id="raised-button-file"
                     accept="video/*"
                     // style={{ display: 'none' }}
                     multiple={false}
                     type="file"
                     onChange={(event) => setVideo(event.target.files[0])}
                 />
-                <Button variant="raised" type="submit"> Upload </Button>
+                {/* <Button variant="raised" type="submit"> Upload </Button> */}
+                <label htmlFor="raised-button-file">
+                    <Button 
+                        variant="contained" 
+                        color="primary" 
+                        className={classes.button}
+                        type="submit"
+                    >
+                        SUBIR
+                    </Button>
+                </label>
+
+                {/* <input
+                    accept="image/*"
+                    className={classes.input}
+                    style={{ display: 'none' }}
+                    id="raised-button-file"
+                    multiple
+                    type="file"
+                />
+                <label htmlFor="raised-button-file">
+                <Button variant="raised" component="span" className={classes.button}>
+                    Upload
+                </Button>
+                </label> */}
+
             </form>
         </section>
 
@@ -69,23 +95,48 @@ const UploadForm = ({ classes, uploadVideo, error, history }) => {
         {videoURL && <section className={classes.videoPreview}>
             <Player videoURL={videoURL} />
             <Select
-                // defaultValue={option}
+                // defaultValue={{ value: null, label: 'categorías'}}
+                // placeholder={'categorías'}
                 isClearable={true}
                 isSearchable={true}
                 name="color"
                 options={options}
                 onChange={({ value }) => setCategory(value)}
+                // isMulti
+                // label='Categorías'
+                // TextFieldProps={{
+                    
+                //     InputLabelProps: {
+                //       htmlFor: 'react-select-multiple',
+                //       shrink: true,
+                //     },
+                //   }}
             />
         </section>}
 
-        {videoURL && category && <TextField
+        {/* {videoURL && category && <TextField
                                     label="Name"
                                     onChange={(e) => setName(e.target.value)}
-                                  />}
+                                  />} */}
 
-        {videoURL && category && name && <Button onClick={() => handleUploadVideo()} className={classes.button}>
-            Compartir
-        </Button>}
+        {videoURL && category && <TextField
+                                    label="nombre"
+                                    // defaultValue="inventa un nombre corto creativo"
+                                    className={classes.textField}
+                                    margin="normal"
+                                    variant="outlined"
+                                    onChange={(e) => setName(e.target.value)}
+                                    fullWidth
+                                />}
+
+        {videoURL && category && name && <Button 
+                                            onClick={() => handleUploadVideo()} 
+                                            className={classes.button}
+                                            variant="contained" 
+                                            color="primary"
+                                        > 
+                                            COMPARTIR
+                                        </Button>}
 
     </>
 }

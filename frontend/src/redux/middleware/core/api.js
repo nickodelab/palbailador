@@ -1,6 +1,6 @@
 
 import axios from 'axios'
-import { API_REQUEST, setResponse, setError } from '../../actions/api'
+import { API_REQUEST, apiSuccess, setError, setClearError } from '../../actions/api'
 import { ENDPOINTS } from './endpoints'
 
 const config = {
@@ -17,6 +17,7 @@ export const apiMdl = ({ getState, dispatch }) => next => async action => {
 
 		try {
 			const url = config.url + ENDPOINTS[endPoint]
+			console.log('url', url)
 
 			const { data } = await axios({
 				method,
@@ -29,8 +30,9 @@ export const apiMdl = ({ getState, dispatch }) => next => async action => {
 				// params
 			})
 			
-			dispatch(setResponse(data))
-			
+			dispatch(apiSuccess(data, endPoint))
+			dispatch(setClearError(endPoint))
+
 		} catch (axiosError) {
 			dispatch(setError(axiosError.response.data.error, endPoint))
 		}

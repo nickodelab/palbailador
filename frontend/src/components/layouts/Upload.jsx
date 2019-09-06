@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles'
 // layout elements
 import MobileMenu from './MobileMenu'
 import UploadForm from './UploadForm'
+import BottomIcons from './BottomIcons'
 
 const styles = theme => ({
     upload: {
@@ -16,6 +17,7 @@ const Upload = ({ classes }) => <>
     <section className={classes.upload}>
             <MobileMenu />
             <UploadForm />
+            <BottomIcons />
     </section>
 
 </>

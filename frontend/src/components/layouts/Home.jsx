@@ -1,22 +1,22 @@
 
 import React from 'react' 
-import { withStyles } from '@material-ui/core/styles'
 
 // layout elements
 import Filters from './Filters'
 import Results from './Results'
 import MobileMenu from './MobileMenu'
-import UploadButton from './UploadButton'
+import BottomIcons from './BottomIcons'
+
 
 const styles = {}
 
-const Home = ({ classes }) => <>
+const Home = () => <>
 
             <MobileMenu />
             <Filters />
             <Results />
-            <UploadButton/>
-
+            <BottomIcons />
+            
 </>
   
-export default withStyles(styles)(Home)
+export default (Home)

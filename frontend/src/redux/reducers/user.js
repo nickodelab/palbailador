@@ -1,10 +1,11 @@
 
-import { SET_SETTINGS } from '../actions/user' 
+import { SET_SETTINGS, SET_TOKEN, SET_USER_VIDEOS } from '../actions/user' 
 
 const userReducerInitialState = {
     settings: {
         notifications: false
-    }
+    },
+    videos: false
 }
 
 export function userReducer(state = userReducerInitialState, action) { 
@@ -16,6 +17,18 @@ export function userReducer(state = userReducerInitialState, action) {
                 settings: {
                     [action.payload]: !state.settings[action.payload]
                 }
+            }
+
+        case SET_TOKEN:
+            return {
+                ...state,
+                token: action.payload
+            }
+
+        case SET_USER_VIDEOS:
+            return {
+                ...state,
+                videos: action.payload
             }
     
         default:

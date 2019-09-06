@@ -73,6 +73,7 @@ const Login = ({ classes, logInUser, error, response }) => {
 								label="Email"
 								name="email"
 								autoComplete="email"
+								autoFocus
 							/>
 						</Grid>
 						<Grid item xs={12}>

@@ -39,7 +39,8 @@ const logic = {
 
         const user = await User.findOne({ email })
         if (!user) throw Error(`user with email ${email} not found`)
-        const match = bcrypt.compare(password, user.password)
+        const match = await bcrypt.compare(password, user.password)
+        console.log(match)
         if (!match) throw Error('wrong credentials')
         return user
 
@@ -51,6 +52,13 @@ const logic = {
 
         return await Video.create(videoData)
         return this.__normalize__(responseUpload)
+    },
+
+    listVideos: async function (){
+
+        // todo validate
+
+        return await Video.find()
     },
 
     __normalize__: (doc) => {

@@ -4,22 +4,18 @@ import { Zoom, Fab } from '@material-ui/core'
 
 import { withRouter } from 'react-router-dom'
 
-import { 
-    Add as AddIcon,
-    Face as FaceIcon
-} from '@material-ui/icons'
+import { Face as FaceIcon } from '@material-ui/icons'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
-    uploadButton: {
+    ProfileButton: {
         position: 'absolute',
         bottom: theme.spacing(2),
-        right: theme.spacing(4),
-        cursor: 'pointer'
+        right: theme.spacing(12)
     }
 })
 
-const UploadButton = ({ classes, history }) => <>
+const ProfileButton = ({ classes, history }) => <>
 
     <Zoom
         in={true}
@@ -28,15 +24,15 @@ const UploadButton = ({ classes, history }) => <>
     >
         <Fab 
             aria-label="upload video" 
-            className={classes.uploadButton} 
+            className={classes.ProfileButton} 
             color="primary"
-            onClick={() => history.push('/upload')}
+            onClick={() => history.push('/profile')}
         >
-            <AddIcon />
+            <FaceIcon />
         </Fab>
-
+        
     </Zoom>
       
 </>
 
-export default withStyles(styles)(withRouter(UploadButton))
+export default withStyles(styles)(withRouter(ProfileButton))

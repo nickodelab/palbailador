@@ -40,6 +40,9 @@ const styles = (theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  successMsg: {
+	  marginTop: '100px'
+  }
 })
 
 const SignUp = ({ classes, registerUser, error, response }) => {
@@ -56,10 +59,10 @@ const SignUp = ({ classes, registerUser, error, response }) => {
     <MobileMenu />
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
+      {!response && <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Registro
-        </Typography>
+			Registro
+		</Typography>
 		<form 
 			onSubmit={handleRegister} 
 			className={classes.form} 
@@ -110,17 +113,18 @@ const SignUp = ({ classes, registerUser, error, response }) => {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link to="#" variant="body2">
+              <Link to="/login" variant="body2">
                 ¿Ya tienes una cuenta? Identifícate
               </Link>
             </Grid>
           </Grid>
         </form>
-      </div>
+      </div>}
   	
-	  {!error && response && <Box mt={5}>
-      							<p>Te has registrado correctamente. <Link to="/login">Logearte</Link></p>
-      						 </Box>}
+	  {response && 
+	  		<Box mt={5} className={classes.successMsg}>
+      			<p>Te has registrado correctamente. <Link to="/login">Logearte</Link></p>
+      		</Box>}
 
 	  {error && <Alert level='error' message={error} />}
     </Container>
