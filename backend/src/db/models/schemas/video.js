@@ -27,7 +27,8 @@ const Video = new Schema(
                 'bachata',
                 'kizomba',
                 'mambo',
-                'cubana'
+                'cubana',
+                'chacha'
             ]
         }
     },

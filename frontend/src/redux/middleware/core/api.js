@@ -1,12 +1,15 @@
 
 import axios from 'axios'
-import { API_REQUEST, apiSuccess, setError, setClearError } from '../../actions/api'
-import { ENDPOINTS } from './endpoints'
 
-const config = {
-	url: 'http://localhost:8080/api',
-	token: 'token',
-}
+import { ENDPOINTS } from './endpoints'
+import { 
+	API_REQUEST, 
+	apiSuccess, 
+	setError, 
+	setClearError 
+} from '../../actions/api'
+
+const { REACT_APP_API_URL } = process.env
 
 export const apiMdl = ({ getState, dispatch }) => next => async action => {
 
@@ -16,8 +19,7 @@ export const apiMdl = ({ getState, dispatch }) => next => async action => {
 		const { method, endPoint } = action.payload.meta
 
 		try {
-			const url = config.url + ENDPOINTS[endPoint]
-			console.log('url', url)
+			const url = REACT_APP_API_URL + ENDPOINTS[endPoint]
 
 			const { data } = await axios({
 				method,

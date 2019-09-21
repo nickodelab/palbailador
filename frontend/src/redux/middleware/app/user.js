@@ -1,6 +1,17 @@
 
-import { API_SUCCESS, apiRequest } from '../../actions/api'
-import { REGISTER_USER, LOG_IN_USER, FILL_USER_VIDEOS, setToken, setUserVideos } from '../../actions/user'
+import { 
+    API_SUCCESS, 
+    apiRequest,
+    setResponse
+} from '../../actions/api'
+
+import { 
+    REGISTER_USER, 
+    LOG_IN_USER, 
+    FILL_USER_VIDEOS, 
+    setToken, 
+    setUserVideos 
+} from '../../actions/user'
 
 export const userMiddleware = ({ getState, dispatch }) => next => action => {
     next(action)
@@ -32,6 +43,14 @@ export const userMiddleware = ({ getState, dispatch }) => next => action => {
 
             if (entity === FILL_USER_VIDEOS) {
                 dispatch(setUserVideos(data))
+            }
+            break
+
+        case `${REGISTER_USER} ${API_SUCCESS}`:
+            var { data, meta: { entity } } = action.payload
+
+            if (entity === REGISTER_USER) {
+                dispatch(setResponse(data))
             }
             break
     }

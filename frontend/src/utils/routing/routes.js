@@ -1,3 +1,4 @@
+
 import Home from '../../components/layouts/Home'
 import Upload from '../../components/layouts/Upload'
 import SignUp from '../../components/pages/SignUp'
@@ -5,42 +6,45 @@ import Login from '../../components/pages/Login'
 import Profile from '../../components/pages/Profile'
 import Thanks from '../../components/pages/Thanks'
 
+const URLS = [
+    { name: 'home', url: '/' },
+    { name: 'upload', url: '/upload' },
+    { name: 'register', url: '/register' },
+    { name: 'login', url: '/login' },
+    { name: 'profile', url: '/profile' },
+    { name: 'vok', url: '/vok' }
+]
+
 const routes = [
     {
-        path: '/',
+        url: URLS.find(({ name }) => name === 'home').url,
         Component: Home,
-        redirect: false,
-        exact: true,
+        exact: true
     },
     {
-        path: '/upload',
+        url: URLS.find(({ name }) => name === 'upload').url,
         Component: Upload,
-        redirect: false,
-        exact: true,
+        exact: true
     },
     {
-        path: '/register',
+        url: URLS.find(({ name }) => name === 'register').url,
         Component: SignUp,
-        redirect: false,
-        exact: true,
+        exact: true
     },
     {
-        path: '/login',
+        url: URLS.find(({ name }) => name === 'login').url,
         Component: Login,
-        redirect: false,
-        exact: true,
+        exact: true
     },
     {
-        path: '/profile',
+        url: URLS.find(({ name }) => name === 'profile').url,
         Component: Profile,
-        redirect: false,
-        exact: true,
+        exact: true
     },
     {
-        path: '/vok',
+        url: URLS.find(({ name }) => name === 'vok').url,
         Component: Thanks,
-        redirect: false,
-        exact: true,
+        exact: true
     },
 ]
 

@@ -15,10 +15,10 @@ export const apiRequest = (body, method, endPoint) => ({
     }
 })
 
-// export const setResponse = (response) => ({
-//     type: SET_RESPONSE,
-//     payload: response
-// })
+export const setResponse = (response) => ({
+    type: SET_RESPONSE,
+    payload: response
+})
 
 export const apiSuccess = (response, entity) => ({
     type: `${entity} ${API_SUCCESS}`,

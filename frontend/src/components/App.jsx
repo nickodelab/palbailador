@@ -1,30 +1,35 @@
 
 import React from 'react' 
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import { ThemeProvider } from '@material-ui/styles'
-import { Container, CssBaseline } from '@material-ui/core/'
+import { CssBaseline } from '@material-ui/core/'
+import { connect } from 'react-redux'
 
 import routing from '../utils/routing' 
 import { theme } from '../styles/theme'
+import MainLayout from './layouts/MainLayout'
 
 console.log('@material-ui/theme', theme)
+
+const App = ({ isUserLoggedIn }) => {
+
+    return <>
+
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+                <Switch>
+                    {routing.getRoutes().map(({ url, exact, Component }, key) => 
+                        <Route
+                            path={url}              
+                            exact={exact}
+                            component={MainLayout(Component)}
+                            key={key}
+                        />)} 
+                </Switch> 
+        </ThemeProvider>
+
+    </>
+}
  
-const App = () => <> 
-    <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Container>
-            <Switch>
-                {routing.getRoutes().map(({ path, Component, exact }, key) => 
-                    <Route
-                        key={key}
-                        exact={exact}
-                        component={Component}
-                        path={path}
-                    />
-                )} 
-            </Switch> 
-        </Container>
-    </ThemeProvider>
-</>
- 
-export default App
+const mapStateToProps = ({ loggedInUser: { token }}) => ({ isUserLoggedIn: !!token })
+export default connect(mapStateToProps)(App)

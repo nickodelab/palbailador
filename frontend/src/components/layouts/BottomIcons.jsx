@@ -1,28 +1,51 @@
 
-import React from 'react' 
-import { withStyles } from '@material-ui/core'
+import React from 'react'
+import { withRouter } from 'react-router-dom'
 
-import UploadButton from './UploadButton'
-import ProfileButton from './ProfileButton'
-import HomeButton from './HomeButton'
+import { connect } from 'react-redux'
 
-const styles = theme => ({
+import {
+    withStyles,
+    BottomNavigation,
+    BottomNavigationAction
+} from '@material-ui/core/'
 
+import { 
+    Home as HomeIcon,
+    ArrowUpward as ArrowUpwardIcon,
+    Person as PersonIcon
+} from '@material-ui/icons/'
+
+
+const styles = (theme) => ({
     bottomIcons: {
-        position: 'absolute',
-        bottom: theme.spacing(2),
-        right: theme.spacing(4),
-        cursor: 'pointer'
+        width: '100%',
+        position: 'fixed',
+        bottom: 0    
     }
+
 })
 
-const BottomIcons = ({ classes, history }) => <>
-    <section className={classes.bottomIcons}>
-        <UploadButton className={classes.uploadButton}/>
-        <ProfileButton className={classes.profileButton}/>
-        <HomeButton className={classes.homeButton}/>
-    </section>
+const BottomIcons = (props) => {
+    const { classes, history, match: { path } } = props
+    const [value, setValue] = React.useState(path)
 
-</>
+    console.log('value', value)
 
-export default withStyles(styles)(BottomIcons)
+    const handleChange = (event, newValue) => {
+        setValue(newValue)
+        history.push(newValue)
+    }
+
+    return <>
+        <BottomNavigation value={value} onChange={handleChange} className={classes.bottomIcons}>
+            <BottomNavigationAction value="/" icon={<HomeIcon />} />
+            <BottomNavigationAction value="/upload" icon={<ArrowUpwardIcon />} />
+            <BottomNavigationAction value="/profile" icon={<PersonIcon />} />
+        </BottomNavigation>
+    </>
+}
+
+const mapStateToProps = (state) => ({ state })
+
+export default withStyles(styles)(connect(mapStateToProps)(withRouter(BottomIcons)))

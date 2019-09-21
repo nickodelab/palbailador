@@ -1,8 +1,10 @@
 
-import routes from './routes' 
- 
+import routes from './routes'
+import validate from '../validate'
+
 const routing = { 
     routes, 
+
     /** 
      * 
      * @returns {Array} - routes 
@@ -10,7 +12,7 @@ const routing = {
     getRoutes () {
         return this.routes 
     }
-}
 
+}
 
 export default routing

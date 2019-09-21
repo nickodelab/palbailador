@@ -1,6 +1,13 @@
- 
-import { VIDEO_UPLOAD } from '../../actions/video'
-import { REGISTER_USER, LOG_IN_USER, FILL_USER_VIDEOS } from '../../actions/user'
+
+import { 
+    VIDEO_UPLOAD
+} from '../../actions/video'
+
+import { 
+    REGISTER_USER, 
+    LOG_IN_USER, 
+    FILL_USER_VIDEOS 
+} from '../../actions/user'
 
 export const ENDPOINTS = {
     [FILL_USER_VIDEOS]: '/video/list',

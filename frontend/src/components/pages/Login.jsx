@@ -9,6 +9,7 @@ import {
 		Container,
 		Box
 } from '@material-ui/core/'
+
 import { withRouter, Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
@@ -59,11 +60,11 @@ const Login = ({ classes, logInUser, error, response }) => {
 				<Typography component="h1" variant="h5">
 					Registro
 				</Typography>
-		<form 
-			onSubmit={handleLogin} 
-			className={classes.form} 
-			noValidate
-		>
+				<form 
+					onSubmit={handleLogin} 
+					className={classes.form} 
+					noValidate
+				>
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
 							<TextField
@@ -107,7 +108,7 @@ const Login = ({ classes, logInUser, error, response }) => {
 				</form>
 			</div>
 
-		{error && <Alert level='error' message={error} />}
+			{error && <Alert level='error' message={error} />}
 		</Container>
 	</>
 }
