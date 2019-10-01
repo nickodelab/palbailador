@@ -7,11 +7,11 @@ export const SET_RESPONSE = `SET_RESPONSE`
 export const SET_ERROR = `SET_ERROR`
 export const SET_CLEAR_ERROR = `SET_CLEAR_ERROR`
 
-export const apiRequest = (body, method, endPoint) => ({
+export const apiRequest = (body, method, endPoint, params) => ({
     type: `${endPoint} ${API_REQUEST}`,
     payload: {
         data: body,
-        meta: { method, endPoint }
+        meta: { method, endPoint, params }
     }
 })
 

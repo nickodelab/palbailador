@@ -6,6 +6,8 @@ import Login from '../../components/pages/Login'
 import Profile from '../../components/pages/Profile'
 import Thanks from '../../components/pages/Thanks'
 
+import Page2Sections from '../../components/layouts/Page2Sections'
+
 const URLS = [
     { name: 'home', url: '/' },
     { name: 'upload', url: '/upload' },
@@ -24,7 +26,8 @@ const routes = [
     {
         url: URLS.find(({ name }) => name === 'upload').url,
         Component: Upload,
-        exact: true
+        exact: true,
+        Layout: Page2Sections
     },
     {
         url: URLS.find(({ name }) => name === 'register').url,

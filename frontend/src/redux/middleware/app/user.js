@@ -53,5 +53,7 @@ export const userMiddleware = ({ getState, dispatch }) => next => action => {
                 dispatch(setResponse(data))
             }
             break
+
+        default:
     }
 }

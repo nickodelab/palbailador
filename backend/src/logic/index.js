@@ -46,12 +46,11 @@ const logic = {
 
     },
 
-    uploadVideo: async function (videoData){
+    uploadVideo: async function (videos){
 
         // todo validate
-
-        return await Video.create(videoData)
-        return this.__normalize__(responseUpload)
+        const result = videos.map(async video => await Video.create(video))
+        return Promise.all(result)
     },
 
     listVideos: async function (){
@@ -61,17 +60,25 @@ const logic = {
         return await Video.find()
     },
 
-    __normalize__: (doc) => {
-        doc = doc.toJSON()
-        console.log(doc.constructor)
 
-        if (doc.constructor !== Object) throw TypeError('doc is not an abject')
-        delete doc.__v
-        doc.id = doc._id.toString()
-        delete doc._id
+    updateVideo: async function({ id, ...newVideoData }) {
+        // todo validate
 
-        return doc
+        return await Video.findByIdAndUpdate(id, newVideoData)
+
     }
+
+    // __normalize__: (doc) => {
+    //     doc = doc.toJSON()
+    //     console.log(doc.constructor)
+
+    //     if (doc.constructor !== Object) throw TypeError('doc is not an abject')
+    //     delete doc.__v
+    //     doc.id = doc._id.toString()
+    //     delete doc._id
+
+    //     return doc
+    // }
 }
 
 module.exports = logic

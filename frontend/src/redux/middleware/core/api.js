@@ -16,20 +16,21 @@ export const apiMdl = ({ getState, dispatch }) => next => async action => {
 	next(action)
 	
 	if (action.type.includes(API_REQUEST)) {
-		const { method, endPoint } = action.payload.meta
+		const { method, endPoint, params } = action.payload.meta
 
 		try {
 			const url = REACT_APP_API_URL + ENDPOINTS[endPoint]
-
+						
 			const { data } = await axios({
 				method,
 				url,
 				data: action.payload.data,
 				// headers: {
-				// 	'access-token': config.apiKey,
-				// 	'auth': token
-				// },
-				// params
+				// 'Content-Type': 'multipart/form-data'
+				// 'access-token': config.apiKey,
+				// 'auth': token
+				// }
+				params
 			})
 			
 			dispatch(apiSuccess(data, endPoint))

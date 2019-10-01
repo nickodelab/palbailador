@@ -13,14 +13,6 @@ const styles = (theme) => ({
 
 const Player = ({ classes, videoURL }) => <>
 
-    <CardMedia
-        // className={classes.player}
-        // image="/static/images/cards/paella.jpg"
-        // image={videoURL}
-        // component={}
-        title="Paella dish"
-    />
-
         <ReactPlayer 
             className={classes.player}
             url={videoURL} 
@@ -29,10 +21,7 @@ const Player = ({ classes, videoURL }) => <>
             width='100%'
             height='100%'
         />
-
-    <CardMedia />
     
-
 </>
 
   

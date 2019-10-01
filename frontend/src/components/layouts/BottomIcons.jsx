@@ -1,7 +1,6 @@
 
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-
 import { connect } from 'react-redux'
 
 import {
@@ -21,18 +20,15 @@ const styles = (theme) => ({
     bottomIcons: {
         width: '100%',
         position: 'fixed',
-        bottom: 0    
+        bottom: 0,
+        boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 1)' 
     }
-
 })
 
-const BottomIcons = (props) => {
-    const { classes, history, match: { path } } = props
+const BottomIcons = ({ classes, history, match: { path } }) => {
     const [value, setValue] = React.useState(path)
 
-    console.log('value', value)
-
-    const handleChange = (event, newValue) => {
+    const handleChange = (e, newValue) => {
         setValue(newValue)
         history.push(newValue)
     }

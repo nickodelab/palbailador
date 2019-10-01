@@ -1,127 +1,106 @@
 
-import React, { useState } from 'react' 
+import React, { useState, useEffect } from 'react' 
 import { withStyles } from '@material-ui/core/styles'
-import { Typography, Button, TextField, CircularProgress, CssBaseline } from '@material-ui/core'
+import clsx from 'clsx'
+import { Button, CircularProgress, Input, Container } from '@material-ui/core'
 import { connect } from 'react-redux'
-import Select from 'react-select'
-import { withRouter } from 'react-router-dom'
 
 import firebase from '../../utils/firebase'
-import { uploadVideo } from '../../redux/actions/video'
-
-import Player from './Player'
+import { uploadVideos } from '../../redux/actions/video'
 import Alert from '../shared/Alert'
+import VideoList from './VideoList'
 
-const styles = {}
+const styles = (theme) => ({
+    uploadInput: {
+        display: 'none'
+    },
+    uploadButton: {
+        marginTop: theme.spacing(4),
+        marginBottom: theme.spacing(12)
+    }
+})
 
-const Upload = ({ classes, uploadVideo, error, history }) => {
-    const [video, setVideo] = useState(false)
-    const [videoURL, setVideoURL] = useState(false)
-    const [category, setCategory] = useState(false)
-    const [name, setName] = useState(false)
+
+const defaultValueVideos = [
+    {
+        created: "2019-09-24T12:01:07.146Z",
+        id: "5d8a05835ab2bb2939bc703e",
+        updated: "2019-09-24T12:01:07.146Z",
+        url: "https://firebasestorage.googleapis.com/v0/b/palbailador-db809.appspot.com/o/videos%2F1569326463671?alt=media&token=16c916a4-fd7b-4d3d-9c66-009d45165752",
+        visibility: "private",
+    },
+    {
+        created: "2019-09-24T12:01:07.145Z",
+        id: "5d8a05835ab2bb2939bc703d",
+        updated: "2019-09-24T12:01:07.145Z",
+        url: "https://firebasestorage.googleapis.com/v0/b/palbailador-db809.appspot.com/o/videos%2F1569326463660?alt=media&token=67dbcbd9-bb98-4bc7-ac42-3c640312a105",
+        visibility: "private"
+    },
+    {
+        created: "2019-09-24T12:01:07.145Z",
+        id: "5d8a05835ab2bb2939bc703d",
+        updated: "2019-09-24T12:01:07.145Z",
+        url: "https://firebasestorage.googleapis.com/v0/b/palbailador-db809.appspot.com/o/videos%2F1569326463660?alt=media&token=67dbcbd9-bb98-4bc7-ac42-3c640312a105",
+        visibility: "private"
+    },
+    {
+        created: "2019-09-24T12:01:07.145Z",
+        id: "5d8a05835ab2bb2939bc703d",
+        updated: "2019-09-24T12:01:07.145Z",
+        url: "https://firebasestorage.googleapis.com/v0/b/palbailador-db809.appspot.com/o/videos%2F1569326463660?alt=media&token=67dbcbd9-bb98-4bc7-ac42-3c640312a105",
+        visibility: "private"
+    },
+    {
+        created: "2019-09-24T12:01:07.145Z",
+        id: "5d8a05835ab2bb2939bc703d",
+        updated: "2019-09-24T12:01:07.145Z",
+        url: "https://firebasestorage.googleapis.com/v0/b/palbailador-db809.appspot.com/o/videos%2F1569326463660?alt=media&token=67dbcbd9-bb98-4bc7-ac42-3c640312a105",
+        visibility: "private"
+    }
+]
+
+const Upload = ({ classes, uploadVideos, error, uploadedVideos }) => {
     const [spinner, setSpinner] = useState(false)
 
-    const handleVideo = async (event) => {  
+    const handleVideoSelected = async (event) => {
         setSpinner(true)
-        event.preventDefault()
-        const videoURL = await firebase.getVideoURL(video)
-        setVideoURL(videoURL)
+        const arrFiles = []
+        Array.from(event.target.files).forEach(file => arrFiles.push(file))
+        const arrVideos = await firebase.uploadMultipleFiles(arrFiles)
+        uploadVideos(arrVideos)
         setSpinner(false)
-    }    
-
-    const handleUploadVideo = () => {
-        uploadVideo({ name, category, url: videoURL })
-        history.push('/vok')
     }
 
-    const options = [
-        { value: 'salsa', label: 'Salsa' },
-        { value: 'bachata', label: 'Bachata' },
-        { value: 'kizomba', label: 'Kizomba' },
-        { value: 'mambo', label: 'Mambo' },
-        { value: 'cubana', label: 'Salsa Cubana' },
-        { value: 'chacha', label: 'Cha Cha' },
-    ]
-
+    uploadedVideos = defaultValueVideos
     return <>
         {error && <Alert level='error' message={error} />}
 
-        <section className={classes.uploadForm}>
-            <Typography variant="h4">¡Comparte tu Figura!</Typography>
-            <p>Crea y comparte con el mundo salsero tus propias figuras.</p>
-            <form onSubmit={handleVideo}>
-                <input
-                    id="raised-button-file"
-                    accept="video/*"
-                    // style={{ display: 'none' }}
-                    multiple={false}
+        {!uploadedVideos && 
+            <Container maxWidth="lg" className={classes['uploadButton']}>
+                <Input
+                    className={clsx(classes['uploadInput'])}
+                    id="file-upload"
+                    inputProps={{ multiple: true, accept: "video/*" }}
                     type="file"
-                    onChange={(event) => setVideo(event.target.files[0])}
+                    onChange={handleVideoSelected}
+                    disableUnderline
                 />
-                <label htmlFor="raised-button-file">
-                    <Button 
-                        variant="contained" 
-                        color="primary" 
-                        className={classes.button}
-                        type="submit"
-                    >
+
+                
+
+                <label className={clsx(classes['uploadButton'])} htmlFor="file-upload">
+                    <Button color="primary" variant="contained" component="span">
                         SUBIR
                     </Button>
                 </label>
 
-            </form>
-        </section>
+                {spinner && <CircularProgress className={clsx(classes['progress'])} />}
 
-        {spinner && <CircularProgress className={classes.progress} />}
+            </Container>}
 
-        {videoURL && <section className={classes.videoPreview}>
-            <Player videoURL={videoURL} />
-            <Select
-                // defaultValue={{ value: null, label: 'categorías'}}
-                // placeholder={'categorías'}
-                isClearable={true}
-                isSearchable={true}
-                name="color"
-                options={options}
-                onChange={({ value }) => setCategory(value)}
-                // isMulti
-                // label='Categorías'
-                // TextFieldProps={{
-                    
-                //     InputLabelProps: {
-                //       htmlFor: 'react-select-multiple',
-                //       shrink: true,
-                //     },
-                //   }}
-            />
-        </section>}
-
-        {/* {videoURL && category && <TextField
-                                    label="Name"
-                                    onChange={(e) => setName(e.target.value)}
-                                  />} */}
-
-        {videoURL && category && <TextField
-                                    label="nombre"
-                                    // defaultValue="inventa un nombre corto creativo"
-                                    className={classes.textField}
-                                    margin="normal"
-                                    variant="outlined"
-                                    onChange={(e) => setName(e.target.value)}
-                                    fullWidth
-                                />}
-
-        {videoURL && category && name && <Button 
-                                            onClick={() => handleUploadVideo()} 
-                                            className={classes.button}
-                                            variant="contained" 
-                                            color="primary"
-                                        > 
-                                            COMPARTIR
-                                        </Button>}
-
+        {uploadedVideos && <VideoList videos={uploadedVideos} />}
     </>
 }
 
-const mapStateToProps = ({ error }) => ({ error })
-export default withStyles(styles)(connect(mapStateToProps, { uploadVideo })(withRouter(Upload)))
+const mapStateToProps = ({ error, videos: { uploadedVideos } }) => ({ error, uploadedVideos })
+export default withStyles(styles)(connect(mapStateToProps, { uploadVideos })(Upload))

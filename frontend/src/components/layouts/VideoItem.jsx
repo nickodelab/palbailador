@@ -1,98 +1,113 @@
 
-import React from 'react' 
+import React, { useState } from 'react' 
 import { withStyles } from '@material-ui/core/styles'
+import clsx from 'clsx'
+import Select from 'react-select'
 
-import moment from 'moment'
+import { Card, CardActions, Grid, Input, CircularProgress } from '@material-ui/core'
+import { connect } from 'react-redux'
 
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
+import { updateVideo } from '../../redux/actions/video'
 
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { 
+    Favorite as FavoriteIcon, 
+    Share as ShareIcon,
+    Button as IconButton
+} from '@material-ui/icons'
 
 import Player from './Player'
+
+import ToggleIcon from '../shared/ToggleIcon'
+
+const options = [
+    { value: 'salsa', label: 'Salsa' },
+    { value: 'bachata', label: 'Bachata' },
+    { value: 'kizomba', label: 'Kizomba' },
+    { value: 'mambo', label: 'Mambo' },
+    { value: 'cubana', label: 'Salsa Cubana' },
+    { value: 'chacha', label: 'Cha Cha' }
+]
 
 const styles = (theme) => ({
     videoItem: {
         marginTop: theme.spacing(3)
     },
+    videoInputName: {
+        padding: theme.spacing(2),
+        color: theme.palette.grey[600],
+        fontSize: theme.typography.body1
+    },
+    select: {
+        width: '35%'
+    },
     card: {
-        maxWidth: 345,
-        marginTop: theme.spacing(2)
+        overflow: 'visible'
     },
-    expand: {
-        transform: 'rotate(0deg)',
-        marginLeft: 'auto',
-        transition: theme.transitions.create('transform', {
-          duration: theme.transitions.duration.shortest,
-        }),
-    },
-    expandOpen: {
-        transform: 'rotate(180deg)',
-    },
-    avatar: {
-        backgroundColor: red[500],
+    videoActions: {
+        display: 'flex',
+        justifyContent: 'space-between'
     }
 })
 
-const VideoItem = ({ classes, video: { id, name, url, category, created } }) => {
-    const [expanded, setExpanded] = React.useState(false);
+const customStyles = {
+    // option: (provided, state) => ({
+    //     ...provided,
+    //     padding: 3
+    // })
+}
 
-    function handleExpandClick() {
-        setExpanded(!expanded)
+const VideoItem = ({ classes, video, updateVideo, isRaised, setIndexRaised, index }) => {
+    const [videoName, setVideoName] = useState(video.name)
+
+    const onEditVideo = (event) => {
+        event.preventDefault()
+        updateVideo({ id: video.id, name: videoName })
     }
 
+    const { id, name, url } = video
 
-  return <>
-        {console.log(created)}
-        <Card className={classes.card} key={id}>
-            <CardHeader
-                avatar={<Avatar aria-label={`Video Salsa - ${category}`}  className={classes.avatar}>{`${category[0].toUpperCase()}`}</Avatar>}
-                title={`${name.replace(/^\w/, c => c.toUpperCase())}`}
-                subheader={moment(created).format('DD.MM.YY')}
-            />
+    console.log('videoName', videoName)
+    return <>
+            <Grid item xs={12} sm={6} md={4} onClick={() => setIndexRaised(index)}>
+                <Card className={clsx(classes.card)} key={id} raised={isRaised}>
+                    <form onSubmit={onEditVideo}>
+                        <Input
+                            className={clsx(classes['videoInputName'])}
+                            disableUnderline
+                            fullWidth
+                            autoComplete="off"
+                            placeholder={'Introduce un nombre para este vídeo'}
+                            onChange={(e) => setVideoName(e.target.value)}
+                            value={videoName}
+                        />
+                    </form>
 
-            <Player videoURL={url}/>
+                    <Player videoURL={url}/>
+                    
+                    <CardActions className={classes.videoActions}>
+
+                        <Select 
+                            options={options}
+                            className={classes.select}
+                            styles={customStyles}
+                            placeholder="categoría..."
+                        />
+                        
+                        <ToggleIcon 
+                            iconOn="lock" 
+                            iconOff="lock_open" 
+                            textOn="privado" 
+                            textOff="compartido en grupos" 
+                        />
+                        
+                    </CardActions>
+
+                </Card>
+            </Grid>
             
-            <CardActions disableSpacing>
-                <IconButton aria-label="Add to favorites">
-                <FavoriteIcon />
-                </IconButton>
-                <IconButton aria-label="Share">
-                <ShareIcon />
-                </IconButton>
-                <IconButton
-                    className={classes.expand, {
-                        [classes.expandOpen]: expanded,
-                    }}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="Show more"
-                >
-                {/* <ExpandMoreIcon /> */}
-                </IconButton>
-            </CardActions>
+    </> 
+}
 
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                    <Typography paragraph>Method:</Typography>
-                    <Typography paragraph>
-                        Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
-                        minutes.
-                    </Typography>
-                </CardContent>
-            </Collapse>
-        </Card>
+const mapStateToProps = ({ error, response }) => ({ error, response })
 
-    </>
-}  
-export default withStyles(styles)(VideoItem)
+export default withStyles(styles)(connect(mapStateToProps, { updateVideo })(VideoItem))

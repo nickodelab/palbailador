@@ -9,7 +9,6 @@ const Video = new Schema(
             type: String,
             trim: true,
             maxlength: 80,
-            required: true
         },
         
         url: {
@@ -21,7 +20,6 @@ const Video = new Schema(
 
         category: {
             type: String,
-            required: true,
             enum: [
                 'salsa',
                 'bachata',
@@ -30,6 +28,15 @@ const Video = new Schema(
                 'cubana',
                 'chacha'
             ]
+        },
+
+        visibility: {
+            type: String,
+            enum: [
+                'public', // in future
+                'private', // show in profile
+            ],
+            default: 'private'
         }
     },
     options

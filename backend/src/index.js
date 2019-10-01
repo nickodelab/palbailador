@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
  
 const { tokenHelper, cors } = require('./middlewares/')
-const { registerUser, authUser, newVideo, listVideos } = require('./routes')
+const { registerUser, authUser, newVideos, listVideos, updateVideo } = require('./routes')
  
 const { env: { DB_URL, PORT, JWT_SECRET }, argv: [, , port = PORT || 8080] } = process
 
@@ -30,8 +30,9 @@ mongoose.connect(DB_URL, mongooseOpts)
         router.post('/user/new', jsonBodyParser, registerUser)
         router.post('/user/login', jsonBodyParser, authUser)
 
-        router.post('/video/new', jsonBodyParser, newVideo)
+        router.post('/video/new', jsonBodyParser, newVideos)
         router.get('/video/list', listVideos)
+        router.put('/video/update', jsonBodyParser, updateVideo)
 
         app.use('/api', router)
 

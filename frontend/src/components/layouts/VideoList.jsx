@@ -1,21 +1,31 @@
 
-import React from 'react' 
-import { withStyles } from '@material-ui/core/styles'
+import React, { useState } from 'react' 
+import { Grid, Container, withStyles} from '@material-ui/core/'
 
 import VideoItem from './VideoItem'
 
 const styles = (theme) => ({
     videoList: {
-        marginTop: theme.spacing(3)
+        marginTop: theme.spacing(4),
+        marginBottom: theme.spacing(12)
     }
 })
+const VideoList = ({ classes, videos }) => {
+    const [indexRaised, setIndexRaised] = useState(-1)
 
-const VideoList = ({ classes, videos }) => <>
-    {console.log('VideoList', videos)}
-    <section className={classes.videoList}>
-        {videos.map((v, i) => <VideoItem video={v} key={i} />)}
-    </section>
-
-</>
+    return <>
+        <Container maxWidth="lg" className={classes['videoList']}>
+            <Grid container spacing={2}>
+                {videos.map((video, index) => <VideoItem 
+                                                    isRaised={indexRaised === index} 
+                                                    video={video} 
+                                                    key={index} 
+                                                    index={index}
+                                                    setIndexRaised={setIndexRaised}
+                                                />)}
+            </Grid>
+        </Container>
+    </>
+}
   
 export default withStyles(styles)(VideoList)

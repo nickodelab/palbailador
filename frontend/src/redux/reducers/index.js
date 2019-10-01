@@ -5,6 +5,7 @@ import { apiReducer } from '../reducers/api'
 import { uiReducer } from '../reducers/ui'
 import { userReducer } from '../reducers/user'
 import { settingsReducer } from '../reducers/settings'
+import { videoReducer } from '../reducers/video'
 import { RESET_APP } from '../actions/root'
 
 const appReducers = combineReducers({
@@ -12,7 +13,8 @@ const appReducers = combineReducers({
     isMenuOpen: uiReducer,
     loggedInUser: userReducer,
     response: apiReducer,
-    settings: settingsReducer
+    settings: settingsReducer,
+    videos: videoReducer
 })
 
 export const rootReducer = (state, action) => {

@@ -14,12 +14,17 @@ const raleway = {
 const materialUITheme = createMuiTheme({
     palette: {
         primary: {
-            light: '#4ebaaa',
-            main: '#00897b',
-            dark: '#005b4f',
+            main: '#00897b'
+        },
+        background: {
+            main: '#e1e1e0'
         }
     },
     typography: {
+        h1: {
+          fontSize: '3rem',
+          marginBottom: '1rem',
+        },
         fontFamily: [
           'Raleway',
           '-apple-system',
