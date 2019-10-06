@@ -30,10 +30,16 @@ const Video = new Schema(
             ]
         },
 
+        owner: {
+            type: ObjectId,
+            ref: 'User',
+            required: true
+        },
+
         visibility: {
             type: String,
             enum: [
-                'public', // in future
+                'shared', // in future
                 'private', // show in profile
             ],
             default: 'private'

@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react' 
 import { Grid, Container, withStyles} from '@material-ui/core/'
+import Masonry from 'react-masonry-component'
 
 import VideoItem from './VideoItem'
 
@@ -10,12 +11,13 @@ const styles = (theme) => ({
         marginBottom: theme.spacing(12)
     }
 })
+
 const VideoList = ({ classes, videos }) => {
     const [indexRaised, setIndexRaised] = useState(-1)
 
     return <>
         <Container maxWidth="lg" className={classes['videoList']}>
-            <Grid container spacing={2}>
+                <Grid container spacing={2}>
                 {videos.map((video, index) => <VideoItem 
                                                     isRaised={indexRaised === index} 
                                                     video={video} 

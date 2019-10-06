@@ -3,5 +3,6 @@
 
 module.exports = {
     User: require('./user'),
-    Video: require('./video')
+    Video: require('./video'),
+    Group: require('./group'),
 }

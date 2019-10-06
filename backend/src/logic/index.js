@@ -1,6 +1,6 @@
 
 const bcrypt = require('bcrypt')
-const { User, Video } = require('../db/models')
+const { User, Video, Group } = require('../db/models')
 const validator = require('validator')
 
 const logic = {
@@ -60,25 +60,89 @@ const logic = {
         return await Video.find()
     },
 
-
     updateVideo: async function({ id, ...newVideoData }) {
         // todo validate
 
         return await Video.findByIdAndUpdate(id, newVideoData)
 
+    },
+
+    createGroup: async (userId, name, description) => {
+        // todo validate
+
+        const user = await User.findById(userId)
+        if (!user) throw Error('user_not_found')
+
+        const { name, id: groupId } = await Group.create({ name, description, users: [{ user: userId, isAdmin: true }] })
+        user.groups.push(groupId)
+        await user.save()
+
+        return { message: `Grupo: "${name}" creado` }        
+    },
+
+    deleteGroup: async (userId, groupId) => {
+        // todo validate
+
+        const user = await User.findById(userId)
+        if (!user) throw Error('user_not_found')
+
+        const group = await Group.findById(groupId)
+        if (!group) throw Error('group_not_found')
+
+        const isTheUserAdmin = group.users.find(({ user, isAdmin }) => ((user.toString() === userId) && (isAdmin)))
+        if (!isTheUserAdmin) throw Error('user_has_no_privileges_to_delete_the_group')
+
+        const { name } = await Group.findByIdAndDelete(groupId)
+        return { message: `Grupo: "${name}" borrado` }
+    },
+
+    addUserToGroup: async (groupId, userId) => {
+        // todo validate
+
+        const group = await Group.findById(groupId)
+        if (!group) throw Error('group_not_found')
+
+        const user = await User.findById(userId)
+        if (!user) throw Error('user_not_found')
+
+        const groupAlreadyHasTheUser = group.users.find(({ user }) => user.toString() === userId)
+        if (groupAlreadyHasTheUser) throw Error('user_already_exists_in_the_group')
+
+        const userAlreadyHasTheGroup = user.groups.find(({ id }) => id.toString() === groupId)
+        if (userAlreadyHasTheGroup) throw Error('user_already_has_the_group')
+
+        const isTheUserAdmin = group.users.find(({ user, isAdmin }) => ((user.toString() === userId) && (isAdmin)))
+        if (!isTheUserAdmin) throw Error('user_has_no_privileges_to_add_user_to_the_group')
+
+        group.users.push({ user: userId })
+        await group.save()
+
+        user.groups.push(groupId)
+        await user.save()
+
+        return { message: `usuario añadido a ${group.name}`}
+    },
+
+
+    addVideoToGroup: async (groupId, videoId) => {
+        // todo validate
+
+        const group = await Group.findById(groupId)
+        if (!group) throw Error('group_not_found')
+
+        const video = await Video.findById(videoId)
+        if (!video) throw Error('video_not_found')
+
+        const videoAlreadyIsInTheGroup = await group.videos.find((id) => id.toString() === videoId)
+        if (videoAlreadyIsInTheGroup) throw Error('video_already_is_in_the_group')
+
+        // todo userLoggedIn is in the group?
+
+        group.videos.push(videoId)
+        await group.save()
+
+        return { message: `video añadido a ${group.name}` }
     }
-
-    // __normalize__: (doc) => {
-    //     doc = doc.toJSON()
-    //     console.log(doc.constructor)
-
-    //     if (doc.constructor !== Object) throw TypeError('doc is not an abject')
-    //     delete doc.__v
-    //     doc.id = doc._id.toString()
-    //     delete doc._id
-
-    //     return doc
-    // }
 }
 
 module.exports = logic

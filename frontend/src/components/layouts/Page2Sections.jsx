@@ -3,7 +3,6 @@ import React from 'react'
 import clsx from 'clsx'
 import { 
 	withStyles,
-	Grid,
 	Typography,
 	Container,
 } from '@material-ui/core'
@@ -14,7 +13,6 @@ const styles = (theme) => ({
 	header: {
 		display: 'flex',
     	flexFlow: 'column wrap',
-    	// justifyContent: 'center',
 		backgroundColor: theme.palette.primary.light,
 		color: theme.palette.getContrastText(theme.palette.primary.light),
 		padding: theme.spacing(9, 0),

@@ -2,7 +2,7 @@
 import React from 'react' 
 import { withStyles } from '@material-ui/core/styles'
 
-import mainMenuImage from '../../images/mainMenuImage.png'
+// import mainMenuImage from '../../images/mainMenuImage.png'
 
 import { connect } from 'react-redux'
 import { setMenuCollapse } from '../../redux/actions/ui'
@@ -14,7 +14,7 @@ const styles = (theme) => ({
 	mainMenu: {
 		flexGrow: '1.4',
 		backgroundSize: 'cover',
-		backgroundImage: `url("${mainMenuImage}")`
+		// backgroundImage: `url("${mainMenuImage}")`
 	},
 	drawerHeader: {
 		display: 'flex',

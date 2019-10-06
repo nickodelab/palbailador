@@ -66,7 +66,6 @@ const VideoItem = ({ classes, video, updateVideo, isRaised, setIndexRaised, inde
 
     const { id, name, url } = video
 
-    console.log('videoName', videoName)
     return <>
             <Grid item xs={12} sm={6} md={4} onClick={() => setIndexRaised(index)}>
                 <Card className={clsx(classes.card)} key={id} raised={isRaised}>
@@ -101,10 +100,8 @@ const VideoItem = ({ classes, video, updateVideo, isRaised, setIndexRaised, inde
                         />
                         
                     </CardActions>
-
                 </Card>
             </Grid>
-            
     </> 
 }
 

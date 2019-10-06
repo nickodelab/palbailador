@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
  
 const { tokenHelper, cors } = require('./middlewares/')
-const { registerUser, authUser, newVideos, listVideos, updateVideo } = require('./routes')
+const { registerUser, authUser, newVideos, listVideos, updateVideo, newGroup, deleteGroup, addUser, addVideo } = require('./routes')
  
 const { env: { DB_URL, PORT, JWT_SECRET }, argv: [, , port = PORT || 8080] } = process
 
@@ -20,6 +20,8 @@ const mongooseOpts = {
 mongoose.connect(DB_URL, mongooseOpts)
     .then(() => {
         tokenHelper.jwtSecret = JWT_SECRET
+
+        const { tokenVerifierMiddleware } = tokenHelper
 
         const app = express()
         const router = express.Router()
@@ -33,6 +35,11 @@ mongoose.connect(DB_URL, mongooseOpts)
         router.post('/video/new', jsonBodyParser, newVideos)
         router.get('/video/list', listVideos)
         router.put('/video/update', jsonBodyParser, updateVideo)
+
+        router.post('/group/new', [tokenVerifierMiddleware, jsonBodyParser], newGroup)
+        router.delete('/group/delete/:groupId', tokenVerifierMiddleware, deleteGroup)
+        router.post('/group/add-user/:groupId', jsonBodyParser, addUser)
+        router.post('/group/add-video/:groupId', jsonBodyParser, addVideo)
 
         app.use('/api', router)
 

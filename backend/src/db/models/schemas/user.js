@@ -27,7 +27,12 @@ const User = new Schema(
         password: {
             type: String,
             required: true,
-        }
+        },
+
+        groups: [{
+            type: ObjectId,
+            ref: 'Group'
+        }]
     },
     options
 )

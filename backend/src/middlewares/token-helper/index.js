@@ -25,7 +25,6 @@ const tokenHelper = {
 
         try {
             const userId = this.verifyToken(token)
-
             req.userId = userId
         } catch ({ message }) {
             return res.status(401).json({ error: message })
