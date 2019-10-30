@@ -33,7 +33,7 @@ const Video = new Schema(
         owner: {
             type: ObjectId,
             ref: 'User',
-            required: true
+            // required: true
         },
 
         visibility: {

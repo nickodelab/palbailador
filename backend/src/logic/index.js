@@ -73,11 +73,11 @@ const logic = {
         const user = await User.findById(userId)
         if (!user) throw Error('user_not_found')
 
-        const { name, id: groupId } = await Group.create({ name, description, users: [{ user: userId, isAdmin: true }] })
+        const { name: groupName, id: groupId } = await Group.create({ name, description, users: [{ user: userId, isAdmin: true }] })
         user.groups.push(groupId)
         await user.save()
 
-        return { message: `Grupo: "${name}" creado` }        
+        return { message: `Grupo: "${groupName}" creado` }        
     },
 
     deleteGroup: async (userId, groupId) => {
