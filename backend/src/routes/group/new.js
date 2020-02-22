@@ -2,11 +2,11 @@
 const logic = require('../../logic')
 
 module.exports = async (req, res) => {
+
     const { userId, body: { name, description } } = req
 
     try {
         const response = await logic.createGroup(userId, name, description)
-        // const token = createToken(user.id)
         res.json(response)
     } catch ({ message }) {
         res.status(403).send({ error: message })

@@ -60,6 +60,7 @@ const styles = (theme) => ({
 
 const Upload = ({ classes, uploadVideos, error, uploadedVideos }) => {
     const [spinner, setSpinner] = useState(false)
+    const [videos, setVideos] = useState(false)
 
     const handleVideoSelected = async (event) => {
         setSpinner(true)
@@ -67,6 +68,7 @@ const Upload = ({ classes, uploadVideos, error, uploadedVideos }) => {
         Array.from(event.target.files).forEach(file => arrFiles.push(file))
         const arrVideos = await firebase.uploadMultipleFiles(arrFiles)
         uploadVideos(arrVideos)
+        setVideos(arrVideos)
         setSpinner(false)
     }
 
@@ -95,7 +97,7 @@ const Upload = ({ classes, uploadVideos, error, uploadedVideos }) => {
 
             </Container>}
 
-        {uploadedVideos && <VideoList videos={uploadedVideos} />}
+        {videos && <VideoList videos={uploadedVideos} />}
     </>
 }
 

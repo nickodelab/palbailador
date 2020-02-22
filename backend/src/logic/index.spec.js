@@ -41,7 +41,6 @@ describe('LOGIC', () => {
                 expect(user.email).to.equal(email)
                 const match = await bcrypt.compare(password, user.password)
                 expect(match).to.be.true
-
             }),
 
             it('error - should thrown an error on non valid email', () => {

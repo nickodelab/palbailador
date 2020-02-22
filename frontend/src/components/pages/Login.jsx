@@ -43,13 +43,13 @@ const styles = (theme) => ({
 	},
 })
 
-const Login = ({ classes, logInUser, error, response }) => {
+const Login = ({ classes, logInUser, error }) => {
 
 	const handleLogin = (event) => {
-			event.preventDefault()
-			const email = event.target.email.value
-			const password = event.target.password.value
-			logInUser({ email, password })
+		event.preventDefault()
+		const email = event.target.email.value
+		const password = event.target.password.value
+		logInUser({ email, password })
 	}
 
 	return <>
@@ -114,5 +114,5 @@ const Login = ({ classes, logInUser, error, response }) => {
 }
 
 
-const mapStateToProps = ({ error, response }) => ({ error, response })
+const mapStateToProps = ({ error, response }) => ({ response })
 export default withStyles(styles)(connect(mapStateToProps, { logInUser })(withRouter(Login)))

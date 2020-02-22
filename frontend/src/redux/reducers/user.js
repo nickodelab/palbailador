@@ -3,7 +3,7 @@ import { SET_SETTINGS, SET_TOKEN, SET_USER_VIDEOS } from '../actions/user'
 
 const userReducerInitialState = {
     videos: false,
-    token: false
+    token: sessionStorage.token
 }
 
 export function userReducer(state = userReducerInitialState, action) { 

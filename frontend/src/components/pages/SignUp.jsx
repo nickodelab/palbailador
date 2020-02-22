@@ -6,16 +6,11 @@ import {
     TextField,
     Grid,
     Typography,
-	Container,
-	Box
+	  Container,
+	  Box
 } from '@material-ui/core/'
-import { withRouter, Link } from 'react-router-dom'
-import { makeStyles } from '@material-ui/core/styles'
-import { connect } from 'react-redux'
 
-import MobileMenu from '../layouts/MobileMenu'
-import { registerUser } from '../../redux/actions/user'
-import Alert from '../shared/Alert'
+import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -34,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -45,30 +40,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const SignUp = ({ registerUser, error, response }) => {
+const SignUp = (props) => {
   const classes = useStyles()
 
-  const handleRegister = (event) => {
-	    event.preventDefault()
-      const nickname = event.target.nickname.value
-      const email = event.target.email.value
-	    const password = event.target.password.value
-	    registerUser({ nickname, email, password })
-  }
-
   return <>
-    <MobileMenu />
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      {!response && <div className={classes.paper}>
+      <div className={classes.paper}>
         <Typography component="h1" variant="h5">
           Registro
         </Typography>
-        <form 
-          onSubmit={handleRegister} 
-          className={classes.form} 
-          noValidate
-        >
+        <form className={classes.form} noValidate>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
@@ -120,17 +102,9 @@ const SignUp = ({ registerUser, error, response }) => {
                 </Grid>
               </Grid>
             </form>
-          </div>}
-  	
-	    {response && 
-	  		<Box mt={5} className={classes.successMsg}>
-      			<p>Te has registrado correctamente. <Link to="/login">Logearte</Link></p>
-      		</Box>}
-
-	    {error && <Alert level='error' message={error} />}
+          </div>
     </Container>
   </>
 }
 
-const mapStateToProps = ({ error, response }) => ({ error, response })
-export default connect(mapStateToProps, { registerUser })(withRouter(SignUp))
+export default SignUp

@@ -32,7 +32,7 @@ const Video = new Schema(
 
         owner: {
             type: ObjectId,
-            ref: 'User',
+            ref: 'User'
             // required: true
         },
 

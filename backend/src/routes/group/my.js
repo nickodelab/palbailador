@@ -1,14 +1,12 @@
 
 const logic = require('../../logic')
 
-// const { tokenHelper: { createToken }} = require('../../middlewares')
-
 module.exports = async (req, res) => {
     
-    const { body: { userId }} = req
+    const { userId } = req
 
     try {
-        const response = await logic.listUserGroups(userId)
+        const response = await logic.getMyGroups(userId)
         // const token = createToken(user.id)
         res.json(response)
     } catch ({ message }) {

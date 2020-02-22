@@ -15,10 +15,11 @@ const styles = (theme) => ({
 const VideoList = ({ classes, videos }) => {
     const [indexRaised, setIndexRaised] = useState(-1)
 
-    return <>
+    console.log('videos', videos)
+    return  <>
         <Container maxWidth="lg" className={classes['videoList']}>
                 <Grid container spacing={2}>
-                {videos.map((video, index) => <VideoItem 
+                {videos && videos.map((video, index) => <VideoItem 
                                                     isRaised={indexRaised === index} 
                                                     video={video} 
                                                     key={index} 

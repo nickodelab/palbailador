@@ -2,6 +2,7 @@
 const bcrypt = require('bcrypt')
 const { User, Video, Group } = require('../db/models')
 const validator = require('validator')
+const { ObjectId } = require('mongodb')
 
 const logic = {
 
@@ -92,7 +93,12 @@ const logic = {
         const isTheUserAdmin = group.users.find(({ user, isAdmin }) => ((user.toString() === userId) && (isAdmin)))
         if (!isTheUserAdmin) throw Error('user_has_no_privileges_to_delete_the_group')
 
+        // delete the group
         const { name } = await Group.findByIdAndDelete(groupId)
+
+        // delete the group in the user model
+        await User.findByIdAndUpdate(userId, { $pullAll: { groups: [groupId] } })
+
         return { message: `Grupo: "${name}" borrado` }
     },
 
@@ -142,6 +148,12 @@ const logic = {
         await group.save()
 
         return { message: `video añadido a ${group.name}` }
+    },
+
+    getMyGroups: async (userId) => {
+        // todo validate
+
+        const user = User
     }
 }
 
