@@ -8,7 +8,8 @@
     "watch": "nodemon src",
     "debug": "node debug src",
     "test": "nyc mocha --timeout=3000 $(find src -name '*.spec.js')",
-    "test-coverage": "nyc report --reporter=text-lcov | coveralls  --timeout 10000 $(find src -name '*.spec.js')"
+    "test-coverage": "nyc report --reporter=text-lcov | coveralls  --timeout 10000 $(find src -name '*.spec.js')",
+    "coveralls": "npm run test -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "author": "",
   "license": "ISC",
