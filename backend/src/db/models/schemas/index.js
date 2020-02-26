@@ -1,8 +1,10 @@
 
 'use strict'
 
+const { User } = require('./user')
+
 module.exports = {
-    User: require('./user'),
+    User,
     Video: require('./video'),
     Group: require('./group'),
 }

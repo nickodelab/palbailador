@@ -1,23 +1,25 @@
 
 const bcrypt = require('bcrypt')
-const { User, Video, Group } = require('../db/models')
 const validator = require('validator')
-const { ObjectId } = require('mongodb')
+
+const { User, Video, Group } = require('../db/models')
+const tokenHelper = require('../middlewares/token-helper')
 
 const logic = {
-
     /**
-     * Creates new user
+     * Creates new user with email, nickname and password
      * 
      * @param {Object} userData 
-     * @throws {Error} on non valid data 
+     * @returns {Object} - resolved with Object - the new user created
+     * @throws {Error} on non valid data or existing user
      */
-
     registerUser: async (userData) => {
+        if (!validator.isEmail(userData.email)) throw TypeError('non valid email')
+        if (!validator.isLength(userData.nickname, { min: 3, max: 30 })) throw Error('non valid nickname length')
+        if (!validator.isAlphanumeric(userData.nickname)) throw Error('non valid nickname chars. Only letter and/or numbers')
+        if (!validator.isLength(userData.password, { min: 6 })) throw Error('password has to be 6 chars length minimum')
 
         const { nickname, email, password } = userData
-        
-        if (!validator.isEmail(email)) throw Error('non valid email')
 
         const user = await User.findOne({ email })
         if (user) throw Error(`user with email ${email} already exists`)
@@ -26,63 +28,63 @@ const logic = {
         
         return User.create({ nickname, email, password: hash })
     },
-
     /**
-     * Authenticates user by its credentials.
+     * Authenticates a user saving the userId in the token's sub (in tokenHelper)
      * 
-     * @param {string} email 
-     * @param {string} password 
+     * @param {String} email
+     * @param {String} password
+     * @returns {String} - token
+     * @throws {Error} on non valid, wrong password or non existing user
      */
-
     authenticateUser: async (email, password) => {
-
-        // todo validate
+        if (!validator.isEmail(email)) throw TypeError('non valid email')
+        if (!validator.isLength(password, { min: 6 })) throw Error('password has to be 6 chars length minimum')
 
         const user = await User.findOne({ email })
         if (!user) throw Error(`user with email ${email} not found`)
+
         const match = await bcrypt.compare(password, user.password)
-        console.log(match)
         if (!match) throw Error('wrong credentials')
-        return user
 
+        const token = tokenHelper.createToken(user.id)
+
+        return token
     },
-
-    uploadVideo: async function (videos){
-
-        // todo validate
-        const result = videos.map(async video => await Video.create(video))
-        return Promise.all(result)
-    },
-
-    listVideos: async function (){
-
-        // todo validate
-
-        return await Video.find()
-    },
-
-    updateVideo: async function({ id, ...newVideoData }) {
-        // todo validate
-
-        return await Video.findByIdAndUpdate(id, newVideoData)
-
-    },
-
+    /**
+     * Creates a new group
+     * 
+     * @param {String} userId - the user who is logged in - the only isAdmin: true in the group
+     * @param {String} name
+     * @param {String} description
+     * @returns {Promise} - resolved with Object - the new user created
+     * @throws {Error} on non valid userId, wrong password or non existing user
+     */
     createGroup: async (userId, name, description) => {
-        // todo validate
+        if (!validator.isLength(userId, { min: 6 })) throw Error('non valid userId')
+        if (!validator.isLength(name, { min: 2 })) throw Error('non valid group name')
+        if (!validator.isLength(description, { min: 3 })) throw Error('non valid group description')
 
         const user = await User.findById(userId)
         if (!user) throw Error('user_not_found')
 
-        const { name: groupName, id: groupId } = await Group.create({ name, description, users: [{ user: userId, isAdmin: true }] })
-        user.groups.push(groupId)
+        const newGroup = await Group.create({ name, description, members: [{ user: userId, isAdmin: true }] })
+        user.groups.push(newGroup._id)
         await user.save()
 
-        return { message: `Grupo: "${groupName}" creado` }        
+        return newGroup    
     },
-
+    /**
+     * Deletes a group by groupId
+     * 
+     * @param {String} userId
+     * @param {String} groupId
+     * @returns {Object} - resolved with Object with message
+     * @throws {Error} - on non valid userId or groupId
+     * 
+     */
     deleteGroup: async (userId, groupId) => {
-        // todo validate
+        if (!validator.isLength(userId, { min: 6 })) throw Error('non valid userId')
+        if (!validator.isLength(groupId, { min: 6 })) throw Error('non valid groupId')
 
         const user = await User.findById(userId)
         if (!user) throw Error('user_not_found')
@@ -90,20 +92,28 @@ const logic = {
         const group = await Group.findById(groupId)
         if (!group) throw Error('group_not_found')
 
-        const isTheUserAdmin = group.users.find(({ user, isAdmin }) => ((user.toString() === userId) && (isAdmin)))
+        const isTheUserAdmin = group.members.find(({ user, isAdmin }) => ((user.toString() === userId) && (isAdmin)))
         if (!isTheUserAdmin) throw Error('user_has_no_privileges_to_delete_the_group')
 
-        // delete the group
-        const { name } = await Group.findByIdAndDelete(groupId)
+        const deletedGroup = await Group.findByIdAndDelete(groupId)
 
-        // delete the group in the user model
-        await User.findByIdAndUpdate(userId, { $pullAll: { groups: [groupId] } })
+        const wasTheUserUpdated = await User.findByIdAndUpdate(userId, { $pullAll: { groups: [groupId] } })
 
-        return { message: `Grupo: "${name}" borrado` }
+        return deletedGroup
     },
-
-    addUserToGroup: async (groupId, userId) => {
-        // todo validate
+    /**
+     * Add a user to the group
+     * 
+     * @param {String} groupId
+     * @param {String} userId
+     * @param {String} loggedInUserId
+     * @returns {Object} - resolved with Object with message
+     * @throws {Error} - on non valid userId, loggedInUser, userId...
+     */
+    addUserToGroup: async (groupId, userId, loggedInUserId) => {
+        if (!validator.isLength(groupId, { min: 6 })) throw Error('non valid groupId')
+        if (!validator.isLength(userId, { min: 6 })) throw Error('non valid userId')
+        if (!validator.isLength(loggedInUserId, { min: 6 })) throw Error('non valid loggedInUserId')
 
         const group = await Group.findById(groupId)
         if (!group) throw Error('group_not_found')
@@ -111,14 +121,17 @@ const logic = {
         const user = await User.findById(userId)
         if (!user) throw Error('user_not_found')
 
-        const groupAlreadyHasTheUser = group.users.find(({ user }) => user.toString() === userId)
-        if (groupAlreadyHasTheUser) throw Error('user_already_exists_in_the_group')
+        const userLoggedIn = await User.findById(loggedInUserId)
+        if (!userLoggedIn) throw Error('logged_in_user_not_found')
+
+        const isTheUserAdmin = group.users.find(({ user, isAdmin }) => ((user.toString() === loggedInUserId) && (isAdmin)))
+        if (!isTheUserAdmin) throw Error('user_has_no_privileges_to_add_user_to_the_group')
 
         const userAlreadyHasTheGroup = user.groups.find(({ id }) => id.toString() === groupId)
         if (userAlreadyHasTheGroup) throw Error('user_already_has_the_group')
 
-        const isTheUserAdmin = group.users.find(({ user, isAdmin }) => ((user.toString() === userId) && (isAdmin)))
-        if (!isTheUserAdmin) throw Error('user_has_no_privileges_to_add_user_to_the_group')
+        const groupAlreadyHasTheUser = group.users.find(({ user }) => user.toString() === userId)
+        if (groupAlreadyHasTheUser) throw Error('user_already_exists_in_the_group')
 
         group.users.push({ user: userId })
         await group.save()
@@ -128,10 +141,69 @@ const logic = {
 
         return { message: `usuario añadido a ${group.name}`}
     },
+    /**
+     * Gets my groups I belong to
+     * 
+     * @param {String} userId
+     * @returns {Object} - resolved with Object with message
+     * @throws {Error} - on non valid userId or not found user
+     */
+    getMyGroups: async (userId) => {
+        if (!validator.isLength(userId, { min: 6 })) throw Error('non valid userId')
 
+        const user = await User.findById(userId).populate({ path: 'groups', populate: { path: 'members.user', select: 'nickname' }})
+        if (!user) throw Error('user_not_found')
 
+        return user.groups
+
+    },
+    /**
+     * Save all videos in the videos param in the database
+     * 
+     * @param {Array} videos - array of object = video
+     * @returns {Promise} - resolved with Array - all videos uploaded
+     * @throws {Error} - on non valid userId or not found user
+     */
+    uploadVideo: async function (videos){
+        if (videos.constructor !== Array) throw TypeError('videos is not an array')
+
+        const result = videos.map(async video => await Video.create(video))
+        return Promise.all(result)
+    },
+    /**
+     * Get all videos
+     * // todo
+     * 
+     * makes sense get all videos in the system? maybe gets videos with groupId
+     */
+    listVideos: async function (){
+
+        return await Video.find()
+    },
+    /**
+     * Save all videos in the database
+     * 
+     * @param {Object} - destructured the video object
+     * @returns {Object} - the video / object updated
+     * @throws {Error} - on non valid userId or not found user
+     */
+    updateVideo: async function({ id, ...newVideoData }) {
+        const video = Video.findById(id)
+        if (!video) throw Error('video not found')
+
+        return await Video.findByIdAndUpdate(id, newVideoData)
+
+    },
+    /**
+     * Add a video to a group by groupId
+     * 
+     * @param {String} groupId
+     * @param {String} videoId
+     * @throws {Error} - on non valid groupId, videoId, group not found, video not found...
+     */
     addVideoToGroup: async (groupId, videoId) => {
-        // todo validate
+        if (!validator.isLength(userId, { min: 6 })) throw Error('non valid userId')
+        if (!validator.isLength(videoId, { min: 6 })) throw Error('non valid videoId')
 
         const group = await Group.findById(groupId)
         if (!group) throw Error('group_not_found')
@@ -149,12 +221,6 @@ const logic = {
 
         return { message: `video añadido a ${group.name}` }
     },
-
-    getMyGroups: async (userId) => {
-        // todo validate
-
-        const user = User
-    }
 }
 
 module.exports = logic

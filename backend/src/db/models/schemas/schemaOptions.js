@@ -9,6 +9,7 @@ module.exports = {
             ret.updated = moment(ret.updatedAt)
             delete ret._id
             delete ret.__v
-        }
+        },
+        versionKey: false
     }
 }

@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
     const { params: { groupId }, body: { userId }} = req
 
     try {
-        const response = await logic.addUserToGroup(groupId, userId)
+        const response = await logic.addUserToGroup(groupId, userId, req.userId)
         // const token = createToken(user.id)
         res.json(response)
     } catch ({ message }) {

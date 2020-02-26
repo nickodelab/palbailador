@@ -2,13 +2,15 @@
 const { Schema } = require('mongoose')
 const { Types: { ObjectId } } = Schema
 const options = require('./schemaOptions')
+const validator = require('validator')
 
 const User = new Schema(
     {    
         nickname: {
             type: String,
             required: true,
-            maxlength: 50,
+            minlength: 3,
+            maxlength: 30,
             trim: true
         },
 
@@ -17,9 +19,7 @@ const User = new Schema(
             required: true,
             unique: true,
             validate: {
-                validator: email => {
-                    return /^\w+([\.-]?\w+)+@\w+([\.:]?\w+)+(\.[a-zA-Z0-9]{2,3})+$/.test(email);
-                },
+                validator : validator.isEmail,
                 message: props => `${props.value} is not a valid email`
             }
         },
@@ -37,4 +37,4 @@ const User = new Schema(
     options
 )
 
-module.exports = User
+module.exports = { User, validator }

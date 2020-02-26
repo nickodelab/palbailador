@@ -33,10 +33,10 @@ const { env: { DB_URL, PORT, JWT_SECRET }} = process
 const mongooseOpts = {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 }
 
- 
 mongoose.connect(DB_URL, mongooseOpts)
     .then(() => {
         tokenHelper.jwtSecret = JWT_SECRET
@@ -59,11 +59,11 @@ mongoose.connect(DB_URL, mongooseOpts)
         router.put('/video/update', jsonBodyParser, updateVideo)
 
         // groups
-        router.post('/group/add-user/:groupId', jsonBodyParser, addUser)
+        router.post('/group/add-user/:groupId', [tokenVerifierMiddleware, jsonBodyParser], addUser)
         router.post('/group/new', [tokenVerifierMiddleware, jsonBodyParser], newGroup)
         router.delete('/group/delete/:groupId', tokenVerifierMiddleware, deleteGroup)
-        router.post('/group/add-video/:groupId', jsonBodyParser, addVideo)
         router.post('/group/my', tokenVerifierMiddleware, getMyGroups)
+        router.post('/group/add-video/:groupId', jsonBodyParser, addVideo)
 
         // config
         app.use('/api', router)

@@ -18,7 +18,7 @@ const Group = new Schema(
             trim: true
         },
 
-        users: [{
+        members: [{
             user: {
                 type: ObjectId,
                 ref: 'User'
