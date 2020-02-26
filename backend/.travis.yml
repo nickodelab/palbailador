@@ -6,6 +6,6 @@ script:
   - npm test
 before_install:
   - npm i -g npm@6.4.1
-  - npm i
+  - npm install
 after_success:
   - npm test
