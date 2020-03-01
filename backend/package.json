@@ -17,15 +17,12 @@
   "license": "ISC",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged-pre-commit",
+      "pre-push": "npm test"
     }
   },
-  "lint-staged": {
-    "*.js": [
-      "npm run lint:fix",
-      "npm test",
-      "git add"
-    ]
+  "lint-staged-pre-commit": {
+    "*.js": "npm run lint:fix"
   },
   "dependencies": {
     "bcrypt": "^3.0.4",
