@@ -372,25 +372,41 @@ describe('LOGIC', () => {
       password: `password-${Math.random()}`
     }
 
+    const notAdminUser = {
+      nickname: `nickname-NOADMIN`,
+      email: `no-admin-email-${Math.random()}@mail.com`,
+      password: `noadmin-password-${Math.random()}`
+    }
+
     const group = {
       name: `Group Name - ${Math.random()}`,
       description: `lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum`
     }
 
     beforeEach(async () => {
+      // admin user
       const newUser = await User.create({
         ...user,
         password: await bcrypt.hash(user.password, 10)
       })
       user.id = newUser._id.toJSON()
 
-      const NewGroup = await Group.create({
-        ...group,
-        members: [{ user: user.id, isAdmin: true }]
+      // not-admin user
+      const newNotAdminUser = await User.create({
+        ...notAdminUser,
+        password: await bcrypt.hash(notAdminUser.password, 10)
       })
-      group.id = NewGroup._id.toJSON()
+      notAdminUser.id = newNotAdminUser._id.toJSON()
 
-      //todo - update the user
+      const member = { user: user.id, isAdmin: true }
+      const newGroup = await Group.create({
+        ...group,
+        members: [member]
+      })
+      group.id = newGroup._id.toJSON()
+      group.members = [member]
+
+      user.groups = [group.id]
     })
 
     afterEach(async () => {
@@ -415,6 +431,39 @@ describe('LOGIC', () => {
       }
     })
 
+    it('OK - should succeed and remove the group ID from the user', async () => {
+      try {
+        expect(user.groups.length).to.equal(1)
+        expect(user.groups[0]).to.equal(group.id)
+
+        expect(group.members.length).to.equal(1)
+        expect(group.members[0].user).to.equal(user.id)
+        expect(group.members[0].isAdmin).to.be.true
+
+        await logic.deleteGroup(user.id, group.id)
+
+        const userWithoutGroup = await User.findById(user.id)
+
+        expect(userWithoutGroup).to.have.property('_id')
+        expect(userWithoutGroup._id.toJSON()).to.equal(user.id)
+        expect(userWithoutGroup).to.have.property('nickname', user.nickname)
+        expect(userWithoutGroup).to.have.property('email', user.email)
+        expect(userWithoutGroup).to.have.property('groups')
+      } catch (error) {
+        console.log(error.message)
+        expect(error).to.be.an('undefined')
+      }
+    })
+
+    it("NOK - can't delete the group if you are not the admin", async () => {
+      await expect(
+        logic.deleteGroup(notAdminUser.id, group.id)
+      ).to.be.rejectedWith(
+        Error,
+        "The user doesn't have privileges to delete the group"
+      )
+    })
+
     it('NOK - should thrown an error on non valid user id', async () => {
       await expect(logic.deleteGroup(user.id, fakeId)).to.be.rejected
     })
@@ -437,6 +486,43 @@ describe('LOGIC', () => {
 
     it('NOK - should thrown an error on groupId = {}', async () => {
       await expect(logic.deleteGroup(user.id, {})).to.be.rejected
+    })
+  })
+
+  describe('* USER * addUserToGroup', () => {
+    const user = {
+      nickname: `nickname`,
+      email: `email-${Math.random()}@mail.com`,
+      password: `password-${Math.random()}`
+    }
+
+    const group = {
+      name: `Group Name - ${Math.random()}`,
+      description: `lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum`
+    }
+
+    beforeEach(async () => {
+      // admin user
+      const newUser = await User.create({
+        ...user,
+        password: await bcrypt.hash(user.password, 10)
+      })
+      user.id = newUser._id.toJSON()
+
+      const member = { user: user.id, isAdmin: true }
+      const newGroup = await Group.create({
+        ...group,
+        members: [member]
+      })
+      group.id = newGroup._id.toJSON()
+      group.members = [member]
+
+      user.groups = [group.id]
+    })
+
+    afterEach(async () => {
+      await User.deleteMany()
+      await Group.deleteMany()
     })
   })
 

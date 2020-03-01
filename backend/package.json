@@ -7,9 +7,12 @@
     "start": "node src",
     "watch": "nodemon src",
     "debug": "node debug src",
+    "prebuild": "npm run clean",
+    "clean": "rimraf dist",
+    "build": "rollup -c",
     "lint": "eslint '**/*.js'",
     "lint:fix": "npx prettier-eslint $PWD/'**/*.js' --write",
-    "test": "nyc mocha --bail --timeout=3000 $(find src -name '*.spec.js')",
+    "test": "nyc mocha --bail --timeout=3000 $(find src -name 'src/*.spec.js')",
     "test-coverage": "nyc report --reporter=text-lcov | coveralls  --timeout 10000 $(find src -name '*.spec.js')"
   },
   "author": "",
@@ -47,6 +50,9 @@
     "nyc": "^15.0.0",
     "prettier-eslint": "^9.0.1",
     "prettier-eslint-cli": "^5.0.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^1.32.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "standard": "^14.3.1"
   }
 }

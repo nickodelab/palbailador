@@ -113,7 +113,7 @@ const logic = {
       ({ user, isAdmin }) => user.toString() === userId && isAdmin
     )
     if (!isTheUserAdmin) {
-      throw Error('user_has_no_privileges_to_delete_the_group')
+      throw Error("The user doesn't have privileges to delete the group")
     }
 
     const deletedGroup = await Group.findByIdAndDelete(groupId)
