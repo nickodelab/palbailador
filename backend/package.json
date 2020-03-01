@@ -9,7 +9,7 @@
     "debug": "node debug src",
     "lint": "eslint '**/*.js'",
     "lint:fix": "npx prettier-eslint $PWD/'**/*.js' --write",
-    "test": "nyc mocha --timeout=3000 $(find src -name '*.spec.js')",
+    "test": "nyc mocha --bail --timeout=3000 $(find src -name '*.spec.js')",
     "test-coverage": "nyc report --reporter=text-lcov | coveralls  --timeout 10000 $(find src -name '*.spec.js')"
   },
   "author": "",
@@ -22,7 +22,6 @@
   "lint-staged": {
     "*.js": [
       "npm run lint:fix",
-      "git add",
       "npm run test"
     ]
   },
