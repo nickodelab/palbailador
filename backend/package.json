@@ -7,12 +7,25 @@
     "start": "node src",
     "watch": "nodemon src",
     "debug": "node debug src",
+    "lint": "eslint '**/*.js'",
+    "lint:fix": "npx prettier-eslint $PWD/'**/*.js' --write",
     "test": "nyc mocha --timeout=3000 $(find src -name '*.spec.js')",
     "test-coverage": "nyc report --reporter=text-lcov | coveralls  --timeout 10000 $(find src -name '*.spec.js')",
     "coveralls": "npm run test -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "author": "",
   "license": "ISC",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "npm run lint:fix",
+      "git add"
+    ]
+  },
   "dependencies": {
     "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
@@ -27,8 +40,14 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.9",
+    "eslint": "^6.8.0",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8",
     "mocha": "^6.2.0",
     "mocha-lcov-reporter": "^1.3.0",
-    "nyc": "^15.0.0"
+    "nyc": "^15.0.0",
+    "prettier-eslint": "^9.0.1",
+    "prettier-eslint-cli": "^5.0.0",
+    "standard": "^14.3.1"
   }
 }

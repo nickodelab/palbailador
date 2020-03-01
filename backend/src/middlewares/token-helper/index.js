@@ -1,37 +1,38 @@
-
 'use strict'
 
 const jwt = require('jsonwebtoken')
 
 const tokenHelper = {
-    jwtSecret: null,
+  jwtSecret: null,
 
-    createToken(userId) {
-        return jwt.sign({ sub: userId }, this.jwtSecret, { expiresIn: '48h' })
-    },
+  createToken (userId) {
+    return jwt.sign({ sub: userId }, this.jwtSecret, { expiresIn: '48h' })
+  },
 
-    verifyToken(token) {
-        const { sub } = jwt.verify(token, this.jwtSecret)
+  verifyToken (token) {
+    const { sub } = jwt.verify(token, this.jwtSecret)
 
-        if (!sub) throw Error(`subject not present in token ${token}`)
+    if (!sub) throw Error(`subject not present in token ${token}`)
 
-        return sub
-    },
+    return sub
+  },
 
-    tokenVerifierMiddleware(req, res, next) {
-        const { headers: { authorization } } = req
+  tokenVerifierMiddleware (req, res, next) {
+    const {
+      headers: { authorization }
+    } = req
 
-        const token = authorization.substring(7)
+    const token = authorization.substring(7)
 
-        try {
-            const userId = this.verifyToken(token)
-            req.userId = userId
-        } catch ({ message }) {
-            return res.status(401).json({ error: message })
-        }
-
-        next()
+    try {
+      const userId = this.verifyToken(token)
+      req.userId = userId
+    } catch ({ message }) {
+      return res.status(401).json({ error: message })
     }
+
+    next()
+  }
 }
 
 const { createToken, verifyToken, tokenVerifierMiddleware } = tokenHelper

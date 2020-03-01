@@ -1,45 +1,49 @@
-
 const { Schema } = require('mongoose')
-const { Types: { ObjectId } } = Schema
+const {
+  Types: { ObjectId }
+} = Schema
 const options = require('./schemaOptions')
 
 const Group = new Schema(
-    {    
-        name: {
-            type: String,
-            required: true,
-            maxlength: 50,
-            trim: true
-        },
-
-        description: {
-            type: String,
-            maxlength: 250,
-            trim: true
-        },
-
-        members: [{
-            user: {
-                type: ObjectId,
-                ref: 'User'
-            },
-
-            isAdmin: {
-                type: Boolean,
-                default: false
-            }
-        }],
-
-        videos: [{    
-            type: ObjectId,
-            ref: 'Video'
-        }]
+  {
+    name: {
+      type: String,
+      required: true,
+      maxlength: 50,
+      trim: true
     },
-    options
+
+    description: {
+      type: String,
+      maxlength: 250,
+      trim: true
+    },
+
+    members: [
+      {
+        user: {
+          type: ObjectId,
+          ref: 'User'
+        },
+
+        isAdmin: {
+          type: Boolean,
+          default: false
+        }
+      }
+    ],
+
+    videos: [
+      {
+        type: ObjectId,
+        ref: 'Video'
+      }
+    ]
+  },
+  options
 )
 
 module.exports = Group
-
 
 // activity: [
 //     {
