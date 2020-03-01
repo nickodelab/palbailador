@@ -212,7 +212,7 @@ const logic = {
    * makes sense get all videos in the system? maybe gets videos with groupId
    */
   listVideos: async function () {
-    const video = await Video.find();
+    const video = await Video.find()
     return video
   },
   /**
