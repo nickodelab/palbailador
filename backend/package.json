@@ -10,19 +10,21 @@
     "lint": "eslint '**/*.js'",
     "lint:fix": "npx prettier-eslint $PWD/'**/*.js' --write",
     "test": "nyc mocha --timeout=3000 $(find src -name '*.spec.js')",
-    "test-coverage": "nyc report --reporter=text-lcov | coveralls  --timeout 10000 $(find src -name '*.spec.js')",
-    "coveralls": "npm run test -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
+    "test-coverage": "nyc report --reporter=text-lcov | coveralls  --timeout 10000 $(find src -name '*.spec.js')"
   },
   "author": "",
   "license": "ISC",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged-pre-commit",
-      "pre-push": "npm test"
+      "pre-commit": "lint-staged"
     }
   },
-  "lint-staged-pre-commit": {
-    "*.js": "npm run lint:fix"
+  "lint-staged": {
+    "*.js": [
+      "npm run lint:fix",
+      "git add",
+      "npm run test"
+    ]
   },
   "dependencies": {
     "bcrypt": "^3.0.4",
