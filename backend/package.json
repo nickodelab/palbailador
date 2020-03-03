@@ -12,8 +12,8 @@
     "build": "rollup -c",
     "lint": "eslint '**/*.js'",
     "lint:fix": "npx prettier-eslint $PWD/'**/*.js' --write",
-    "test": "nyc mocha --bail --timeout=3000 $(find src -name 'src/*.spec.js')",
-    "test-coverage": "nyc report --reporter=text-lcov | coveralls  --timeout 10000 $(find src -name '*.spec.js')"
+    "test": "mocha src/**/*.spec.js",
+    "test:coverage": "nyc --reporter=html mocha src/**/*.spec.js"
   },
   "author": "",
   "license": "ISC",
@@ -24,7 +24,6 @@
   },
   "lint-staged": {
     "*.js": [
-      "npm run lint:fix",
       "npm run test"
     ]
   },

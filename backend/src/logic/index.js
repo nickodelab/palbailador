@@ -29,9 +29,9 @@ const logic = {
     const user = await User.findOne({ email })
     if (user) throw Error(`user with email ${email} already exists`)
 
-    const hash = await bcrypt.hash(password, 10)
+    const passwordHashed = await bcrypt.hash(password, 10)
 
-    return User.create({ nickname, email, password: hash })
+    return User.create({ nickname, email, password: passwordHashed })
   },
   /**
    * Authenticates a user saving the userId in the token's sub (in tokenHelper)
