@@ -1,13 +1,13 @@
 
 import React from 'react'
-import { 
-    Button,
-    CssBaseline,
-    TextField,
-    Grid,
-    Typography,
-	  Container,
-	  Box
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  Grid,
+  Typography,
+  Container,
+  Link
 } from '@material-ui/core/'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   successMsg: {
-	  marginTop: '100px'
+    marginTop: '100px'
   }
 }))
 
@@ -51,58 +51,58 @@ const SignUp = (props) => {
           Registro
         </Typography>
         <form className={classes.form} noValidate>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    autoComplete="fname"
-                    name="nickname"
-                    variant="outlined"
-                    required
-                    fullWidth
-                    label="Nickname"
-                    autoFocus
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    label="Email"
-                    name="email"
-                    autoComplete="email"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    autoComplete="current-password"
-                  />
-                </Grid>
-              </Grid>
-              <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-              >
-                Registrarse
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                autoComplete="fname"
+                name="nickname"
+                variant="outlined"
+                required
+                fullWidth
+                label="Nickname"
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                label="Email"
+                name="email"
+                autoComplete="email"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                autoComplete="current-password"
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Registrarse
               </Button>
-              <Grid container justify="flex-end">
-                <Grid item>
-                  <Link to="/login" variant="body2">
-                    ¿Ya tienes una cuenta? Identifícate
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link to="/login" variant="body2">
+                ¿Ya tienes una cuenta? Identifícate
                   </Link>
-                </Grid>
-              </Grid>
-            </form>
-          </div>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
     </Container>
   </>
 }

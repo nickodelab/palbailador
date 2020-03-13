@@ -1,11 +1,11 @@
 
-import { 
-    API_SUCCESS, 
+import {
+    API_SUCCESS,
     apiRequest,
     setResponse
 } from '../../actions/api'
 
-import { 
+import {
     VIDEO_UPLOAD,
     VIDEO_UPDATE,
     setUploadedVideos
@@ -25,7 +25,6 @@ export const videoMiddleware = ({ getState, dispatch }) => next => action => {
             break
 
         case `${VIDEO_UPLOAD} ${API_SUCCESS}`:
-            console.log('action.payload.data', action.payload.data)
             dispatch(setUploadedVideos(action.payload.data))
             break
 

@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react' 
+import React, { useState, useEffect } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import { Button, CircularProgress, Input, Container } from '@material-ui/core'
@@ -20,44 +19,6 @@ const styles = (theme) => ({
     }
 })
 
-// const defaultValueVideos = [
-//     {
-//         created: "2019-09-24T12:01:07.146Z",
-//         id: "5d8a05835ab2bb2939bc703e",
-//         updated: "2019-09-24T12:01:07.146Z",
-//         url: "https://firebasestorage.googleapis.com/v0/b/palbailador-db809.appspot.com/o/videos%2F1569326463671?alt=media&token=16c916a4-fd7b-4d3d-9c66-009d45165752",
-//         visibility: "private",
-//     },
-//     {
-//         created: "2019-09-24T12:01:07.145Z",
-//         id: "5d8a05835ab2bb2939bc703d",
-//         updated: "2019-09-24T12:01:07.145Z",
-//         url: "https://firebasestorage.googleapis.com/v0/b/palbailador-db809.appspot.com/o/videos%2F1569326463660?alt=media&token=67dbcbd9-bb98-4bc7-ac42-3c640312a105",
-//         visibility: "private"
-//     },
-//     {
-//         created: "2019-09-24T12:01:07.145Z",
-//         id: "5d8a05835ab2bb2939bc703d",
-//         updated: "2019-09-24T12:01:07.145Z",
-//         url: "https://firebasestorage.googleapis.com/v0/b/palbailador-db809.appspot.com/o/videos%2F1569326463660?alt=media&token=67dbcbd9-bb98-4bc7-ac42-3c640312a105",
-//         visibility: "private"
-//     },
-//     {
-//         created: "2019-09-24T12:01:07.145Z",
-//         id: "5d8a05835ab2bb2939bc703d",
-//         updated: "2019-09-24T12:01:07.145Z",
-//         url: "https://firebasestorage.googleapis.com/v0/b/palbailador-db809.appspot.com/o/videos%2F1569326463660?alt=media&token=67dbcbd9-bb98-4bc7-ac42-3c640312a105",
-//         visibility: "private"
-//     },
-//     {
-//         created: "2019-09-24T12:01:07.145Z",
-//         id: "5d8a05835ab2bb2939bc703d",
-//         updated: "2019-09-24T12:01:07.145Z",
-//         url: "https://firebasestorage.googleapis.com/v0/b/palbailador-db809.appspot.com/o/videos%2F1569326463660?alt=media&token=67dbcbd9-bb98-4bc7-ac42-3c640312a105",
-//         visibility: "private"
-//     }
-// ]
-
 const Upload = ({ classes, uploadVideos, error, uploadedVideos }) => {
     const [spinner, setSpinner] = useState(false)
     const [videos, setVideos] = useState(false)
@@ -72,11 +33,10 @@ const Upload = ({ classes, uploadVideos, error, uploadedVideos }) => {
         setSpinner(false)
     }
 
-    // uploadedVideos = defaultValueVideos
     return <>
         {error && <Alert level='error' message={error} />}
 
-        {!uploadedVideos && 
+        {!uploadedVideos &&
             <Container maxWidth="lg" className={classes['uploadButton']}>
                 <Input
                     className={clsx(classes['uploadInput'])}
@@ -100,6 +60,5 @@ const Upload = ({ classes, uploadVideos, error, uploadedVideos }) => {
         {videos && <VideoList videos={uploadedVideos} />}
     </>
 }
-
 const mapStateToProps = ({ error, videos: { uploadedVideos } }) => ({ error, uploadedVideos })
 export default withStyles(styles)(connect(mapStateToProps, { uploadVideos })(Upload))
