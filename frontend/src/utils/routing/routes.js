@@ -13,11 +13,11 @@ const URLS = [
     { name: 'home', url: '/' },
     { name: 'upload', url: '/upload' },
     { name: 'register', url: '/register' },
-    { name: 'login', url: '/login' }, 
+    { name: 'login', url: '/login' },
     { name: 'profile', url: '/profile' },
     { name: 'vok', url: '/vok' }
 ]
-console.log(Home)
+
 const routes = [
     {
         url: URLS.find(({ name }) => name === 'home').url,

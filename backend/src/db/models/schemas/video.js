@@ -21,22 +21,20 @@ const Video = new Schema(
 
     category: {
       type: String,
-      enum: ['salsa', 'bachata', 'kizomba', 'mambo', 'cubana', 'chacha']
+      enum: ['salsa', 'bachata', 'kizomba', 'mambo', 'cubana', 'chacha'],
+      required: true
     },
 
     owner: {
       type: ObjectId,
-      ref: 'User'
-      // required: true
+      ref: 'User',
+      required: true
     },
 
-    visibility: {
-      type: String,
-      enum: [
-        'shared', // in future
-        'private' // show in profile
-      ],
-      default: 'private'
+    isPublic: {
+      type: Boolean,
+      required: true,
+      default: false
     }
   },
   options

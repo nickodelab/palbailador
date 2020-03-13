@@ -11,6 +11,7 @@ package-lock.json
 
 
 frontend/src/utils/firebase/storage.js
+backend/src/services/firebase/storage.js
 
 build/
 .nyc_output/

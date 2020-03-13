@@ -132,13 +132,14 @@ const logic = {
    * @throws {Error} - on non valid userId, loggedInUser, userId...
    */
   addUserToGroup: async (groupId, userId, loggedInUserId) => {
-    if (!validator.isLength(groupId, { min: 6 })) {
+    if (!validator.isLength(groupId, { min: 6 }))
       throw Error('non valid groupId')
-    }
-    if (!validator.isLength(userId, { min: 6 })) throw Error('non valid userId')
-    if (!validator.isLength(loggedInUserId, { min: 6 })) {
+
+    if (!validator.isLength(userId, { min: 6 }))
+      throw Error('non valid userId')
+
+    if (!validator.isLength(loggedInUserId, { min: 6 }))
       throw Error('non valid loggedInUserId')
-    }
 
     const group = await Group.findById(groupId)
     if (!group) throw Error('group_not_found')
@@ -149,24 +150,13 @@ const logic = {
     const userLoggedIn = await User.findById(loggedInUserId)
     if (!userLoggedIn) throw Error('logged_in_user_not_found')
 
-    const isTheUserAdmin = group.users.find(
-      ({ user, isAdmin }) => user.toString() === loggedInUserId && isAdmin
-    )
-    if (!isTheUserAdmin) {
-      throw Error('user_has_no_privileges_to_add_user_to_the_group')
-    }
+    if (userLoggedIn === userId || group.members.some(({ user: _user }) => _user.toJSON() === userId))
+      throw Error('user_already_has_the_group')
 
-    const userAlreadyHasTheGroup = user.groups.find(
-      ({ id }) => id.toString() === groupId
-    )
-    if (userAlreadyHasTheGroup) throw Error('user_already_has_the_group')
+    const isAdminLoggedInUser = group.members.find(({ user: _user, isAdmin }) => _user.toJSON() === loggedInUserId && isAdmin)
+    if (!isAdminLoggedInUser) throw Error('user_has_no_privileges_to_add_user_to_the_group')
 
-    const groupAlreadyHasTheUser = group.users.find(
-      ({ user }) => user.toString() === userId
-    )
-    if (groupAlreadyHasTheUser) throw Error('user_already_exists_in_the_group')
-
-    group.users.push({ user: userId })
+    group.members.push({ user: userId })
     await group.save()
 
     user.groups.push(groupId)
@@ -175,14 +165,15 @@ const logic = {
     return { message: `usuario añadido a ${group.name}` }
   },
   /**
-   * Gets my groups I belong to
+   * Gets the groups I belong to
    *
    * @param {String} userId
    * @returns {Object} - resolved with Object with message
    * @throws {Error} - on non valid userId or not found user
    */
   getMyGroups: async userId => {
-    if (!validator.isLength(userId, { min: 6 })) throw Error('non valid userId')
+    if (!validator.isLength(userId, { min: 6 }))
+      throw Error('non valid userId')
 
     const user = await User.findById(userId).populate({
       path: 'groups',
@@ -196,73 +187,110 @@ const logic = {
    * Save all videos in the videos param in the database
    *
    * @param {Array} videos - array of object = video
+   * @param {String} loggedInUserId
    * @returns {Promise} - resolved with Array - all videos uploaded
    * @throws {Error} - on non valid userId or not found user
    */
-  uploadVideo: async function (videos) {
-    if (videos.constructor !== Array) throw TypeError('videos is not an array')
+  uploadVideo: async function (videos, loggedInUserId) {
+    if (videos.constructor !== Array)
+      throw TypeError('videos has to be an array')
 
-    const result = await videos.map(async video => Video.create(video))
-    return Promise.all(result)
+    if (!validator.isLength(loggedInUserId, { min: 6 }))
+      throw Error('non valid loggedInUserId')
+
+    const userLoggedIn = await User.findById(loggedInUserId)
+    if (!userLoggedIn) throw Error('logged_in_user_not_found')
+
+    const newVideosPromises = videos.map(async (video) => await Video.create({ ...video, owner: loggedInUserId }))
+
+    const newVideos = await Promise.all(newVideosPromises)
+
+    return newVideos
   },
   /**
-   * Get all videos
-   * // todo
-   *
-   * makes sense get all videos in the system? maybe gets videos with groupId
+   * Get all videos uploaded by me
+   * 
+   * @param {String} loggedInUserId
+   * @returns {Array} - array with all videos
+   * @throws {Error} - on non valid userId or not found user
    */
-  listVideos: async function () {
-    const video = await Video.find()
-    return video
+  getMyVideos: async (loggedInUserId) => {
+    if (!validator.isLength(loggedInUserId, { min: 6 }))
+      throw Error('non valid loggedInUserId')
+
+    const userLoggedIn = await User.findById(loggedInUserId)
+    if (!userLoggedIn) throw Error('logged_in_user_not_found')
+
+    return Video.find({ owner: loggedInUserId })
+
   },
   /**
-   * Save all videos in the database
+   * Updates a video with the information in newVideoData
    *
-   * @param {Object} - destructured the video object
+   * @param {String} videoId
+   * @param {Object} newVideoData - destructured the video object
+   * @param {String} loggedInUserId
    * @returns {Object} - the video / object updated
    * @throws {Error} - on non valid userId or not found user
    */
-  updateVideo: async function ({ id, ...newVideoData }) {
-    const video = Video.findById(id)
-    if (!video) throw Error('video not found')
-
-    const result = Video.findByIdAndUpdate(id, newVideoData)
-    return result
-  },
-
-  /**
-   * Add a video to a group by groupId
-   *
-   * @param {String} groupId
-   * @param {String} videoId
-   * @throws {Error} - on non valid groupId, videoId, group not found, video not found...
-   */
-  addVideoToGroup: async (groupId, videoId) => {
-    if (!validator.isLength(groupId, { min: 6 })) {
-      throw Error('non valid groupId')
-    }
-
-    if (!validator.isLength(videoId, { min: 6 })) {
+  updateVideo: async function (videoId, newVideoData, loggedInUserId) {
+    if (!validator.isLength(videoId, { min: 6 }))
       throw Error('non valid videoId')
-    }
-
-    const group = await Group.findById(groupId)
-    if (!group) throw Error('group_not_found')
 
     const video = await Video.findById(videoId)
     if (!video) throw Error('video_not_found')
 
-    const videoAlreadyIsInTheGroup = await group.videos.find(
-      id => id.toString() === videoId
-    )
+    if (newVideoData.constructor !== Object)
+      throw TypeError('newVideoData is not an object')
+
+    if (!validator.isLength(loggedInUserId, { min: 6 }))
+      throw Error('non valid loggedInUserId')
+
+    const userLoggedIn = await User.findById(loggedInUserId)
+    if (!userLoggedIn) throw Error('logged_in_user_not_found')
+
+    if (video.owner.toJSON() !== loggedInUserId)
+      throw Error('loggedInUserId is not the video owner')
+
+    return await Video.findByIdAndUpdate(videoId, newVideoData, { new: true }).lean()
+  },
+  /**
+   * Add a video to a group
+   *
+   * @param {String} groupId
+   * @param {String} videoId
+   * @param {String} loggedInUserId
+   * @throws {Error} - on non valid groupId, videoId, group not found, video not found...
+   */
+  addVideoToGroup: async (groupId, videoId, loggedInUserId) => {
+    if (!validator.isLength(groupId, { min: 6 }))
+      throw Error('non valid groupId')
+
+    const group = await Group.findById(groupId)
+    if (!group) throw Error('group_not_found')
+
+    if (!validator.isLength(videoId, { min: 6 }))
+      throw Error('non valid videoId')
+
+    const video = await Video.findById(videoId)
+    if (!video) throw Error('video_not_found')
+
+    if (!validator.isLength(loggedInUserId, { min: 6 }))
+      throw Error('non valid loggedInUserId')
+
+    const userLoggedIn = await User.findById(loggedInUserId)
+    if (!userLoggedIn) throw Error('logged_in_user_not_found')
+
+    const videoAlreadyIsInTheGroup = await group.videos.find(id => id.toString() === videoId)
     if (videoAlreadyIsInTheGroup) throw Error('video_already_is_in_the_group')
 
-    // todo userLoggedIn is in the group?
+    const isMemberUserLoggedIn = await group.members.find(({ user }) => user.toString() === loggedInUserId)
+    if (!isMemberUserLoggedIn) throw Error('userLoggedIn doesn\'t belong to the group')
 
     group.videos.push(videoId)
     await group.save()
 
-    return { message: `video añadido a ${group.name}` }
+    return { message: `video added a ${group.name}` }
   }
 }
 

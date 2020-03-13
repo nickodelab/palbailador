@@ -12,8 +12,9 @@
     "build": "rollup -c",
     "lint": "eslint '**/*.js'",
     "lint:fix": "npx prettier-eslint $PWD/'**/*.js' --write",
-    "test": "mocha src/**/*.spec.js",
-    "test:coverage": "nyc --reporter=html mocha src/**/*.spec.js"
+    "test": "mocha --timeout=5000 src/**/*.spec.js",
+    "test:debug": "mocha --inspect-brk src/**/*.spec.js",
+    "test:coverage": "nyc --timeout 5000 --reporter=html mocha src/**/*.spec.js"
   },
   "author": "",
   "license": "ISC",
@@ -32,6 +33,7 @@
     "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
+    "firebase": "^7.10.0",
     "jsonwebtoken": "^8.5.0",
     "moment": "^2.24.0",
     "mongoose": "^5.4.16",

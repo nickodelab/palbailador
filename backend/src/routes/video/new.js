@@ -1,6 +1,8 @@
+
 const logic = require('../../logic')
 
 module.exports = async (req, res) => {
+
   try {
     const response = await logic.uploadVideo(req.body)
     res.json(response)

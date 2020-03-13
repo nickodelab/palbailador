@@ -55,7 +55,7 @@ mongoose
     router.post('/user/login', jsonBodyParser, authUser)
 
     // videos
-    router.post('/video/new', jsonBodyParser, newVideos)
+    router.post('/video/new', newVideos)
     router.get('/video/list', listVideos)
     router.put('/video/update', jsonBodyParser, updateVideo)
 
