@@ -67,7 +67,7 @@ describe('LOGIC', () => {
       it('NOK - should thrown an error on non valid email', async () => {
         await expect(
           logic.registerUser({ ...user, email: 'failEmail@' })
-        ).to.be.rejectedWith(TypeError, 'non val id email')
+        ).to.be.rejectedWith(TypeError, 'non valid email')
       })
 
       it('NOK - should thrown an error on email = ""', async () => {
