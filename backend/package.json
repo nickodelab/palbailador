@@ -12,7 +12,7 @@
     "build": "rollup -c",
     "lint": "eslint '**/*.js'",
     "lint:fix": "npx prettier-eslint $PWD/'**/*.js' --write",
-    "test": "mocha --timeout=5000 src/**/*.spec.js",
+    "test": "mocha --bail --timeout=5000 $PWD/'/**/*.spec.js' --exclude $PWD/'/node_modules/**/*.spec.js'",
     "test:debug": "mocha --inspect-brk src/**/*.spec.js",
     "test:coverage": "nyc --timeout 5000 --reporter=html mocha src/**/*.spec.js"
   },
@@ -20,13 +20,8 @@
   "license": "ISC",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "npm run test"
     }
-  },
-  "lint-staged": {
-    "*.spec.js": [
-      "npm run test"
-    ]
   },
   "dependencies": {
     "bcrypt": "^3.0.4",
