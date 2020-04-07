@@ -26,9 +26,13 @@ const {
   getMyGroups
 } = require('./routes')
 
-const {
-  env: { DB_URL, PORT, JWT_SECRET }
-} = process
+// const {
+//   env: { DB_URL, PORT, JWT_SECRET }
+// } = process
+
+const PORT = 8080;
+const HOST = '0.0.0.0';
+const DB_URL = 'mongodb://localhost:27017/palbailador'
 
 const mongooseOpts = {
   useNewUrlParser: true,
@@ -40,7 +44,8 @@ const mongooseOpts = {
 mongoose
   .connect(DB_URL, mongooseOpts)
   .then(() => {
-    tokenHelper.jwtSecret = JWT_SECRET
+    // tokenHelper.jwtSecret = JWT_SECRET
+    tokenHelper.jwtSecret = 'Mun$zrx1P%OAQVT6V7ECX1sJf*fYRpReu4Pnp0tslieGU1b^vn2^QC@VZ!aN!@2&aquAE093z%eSp^hdB^e3GLx!eyAJjJbpH&I'
 
     const { tokenVerifierMiddleware } = tokenHelper
 
@@ -83,8 +88,9 @@ mongoose
 
     router.get('*', (req, res) => res.status(404).json({ status: 'not found' }))
 
-    app.listen(PORT, () =>
-      console.log(`server running on http://localhost:${PORT}`)
-    )
+    // app.listen(PORT, () => console.log(`server running on http://localhost:${PORT}`))
+    app.listen(PORT, HOST)
+
+    console.log(`Running on http://${HOST}:${PORT}`)
   })
-  .catch(console.error)
+  .catch((error) => console.log('ERROR!', error))

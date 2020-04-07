@@ -7,6 +7,7 @@ module.exports = async (req, res) => {
   } = req
 
   try {
+    console.log('name', name)
     const response = await logic.createGroup(userId, name, description)
     res.json(response)
   } catch ({ message }) {

@@ -201,7 +201,7 @@ const logic = {
     const userLoggedIn = await User.findById(loggedInUserId)
     if (!userLoggedIn) throw Error('logged_in_user_not_found')
 
-    const newVideosPromises = videos.map(async (video) => await Video.create({ ...video, owner: loggedInUserId }))
+    const newVideosPromises = videos.map(async (video) => Video.create({ ...video, owner: loggedInUserId }))
 
     const newVideos = await Promise.all(newVideosPromises)
 
@@ -209,7 +209,6 @@ const logic = {
   },
   /**
    * Get all videos uploaded by me
-   * 
    * @param {String} loggedInUserId
    * @returns {Array} - array with all videos
    * @throws {Error} - on non valid userId or not found user
@@ -222,7 +221,6 @@ const logic = {
     if (!userLoggedIn) throw Error('logged_in_user_not_found')
 
     return Video.find({ owner: loggedInUserId })
-
   },
   /**
    * Updates a video with the information in newVideoData
