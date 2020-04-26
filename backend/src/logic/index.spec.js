@@ -11,7 +11,7 @@ const tokenHelper = require('../middlewares/token-helper')
 const { User, Group, Video } = require('../db/models')
 const logic = require('./')
 
-const { env: { DB_URL, DB_URL_TEST, JWT_SECRET } } = process
+const { env: { DB_URL_TEST, JWT_SECRET } } = process
 
 const mongooseOpts = {
   useNewUrlParser: true,
@@ -20,10 +20,11 @@ const mongooseOpts = {
   useFindAndModify: false
 }
 
+// random password to encrypt the passwords
 tokenHelper.jwtSecret = JWT_SECRET
 
 describe('LOGIC', () => {
-  before(async () => await mongoose.connect(DB_URL_TEST, mongooseOpts))
+  before(async () => mongoose.connect(DB_URL_TEST, mongooseOpts))
 
   const fakeId = '5e3bd4ad907d2934f94a232c'
 
@@ -163,7 +164,7 @@ describe('LOGIC', () => {
 
       it('OK - should login sucessfully', async () => {
         try {
-          const token = await logic.authenticateUser(user.email, user.password)
+          const { token } = await logic.authenticateUser(user.email, user.password)
           const userId = tokenHelper.verifyToken(token)
 
           expect(userId).to.be.a('string')
@@ -319,7 +320,7 @@ describe('LOGIC', () => {
       it('NOK - should thrown an error on userId = ""', async () => {
         await expect(
           logic.createGroup('', group.name, group.description)
-        ).to.be.rejectedWith(Error, 'non valid userId')
+        ).to.be.rejectedWith(Error, 'non valid loggedInUserId')
       })
 
       it('NOK - should thrown an error on userId = []', async () => {
@@ -727,7 +728,7 @@ describe('LOGIC', () => {
       it('NOK - should thrown an error on userId = ""', async () => {
         await expect(
           logic.getMyGroups("")
-        ).to.be.rejectedWith(Error, 'non valid userId')
+        ).to.be.rejectedWith(Error, 'non valid loggedInUserId')
       })
 
       it('NOK - should thrown an error on userId = []', async () => {
@@ -757,7 +758,7 @@ describe('LOGIC', () => {
 
   describe('**** VIDEOS *****', () => {
 
-    describe('- uploadVideo', () => {
+    describe('- uploadVideos', () => {
       const adminUser = {
         nickname: `nickname`,
         email: `email-${Math.random()}@mail.com`,
@@ -788,7 +789,7 @@ describe('LOGIC', () => {
 
       it('OK - should succeed on uploading 3 videos', async () => {
         try {
-          const uploadedVideos = await logic.uploadVideo(videos, adminUser.id)
+          const uploadedVideos = await logic.uploadVideos(videos, adminUser.id)
 
           expect(uploadedVideos.length).to.equal(3)
           uploadedVideos.forEach((_video) => {
@@ -798,7 +799,7 @@ describe('LOGIC', () => {
             expect(_video).to.have.property('url')
             expect(videos.some(({ url }) => url === _video.url)).to.be.true
             expect(_video).to.have.property('category', 'salsa')
-            expect(_video).to.have.property('isPublic', false)
+            expect(_video).to.have.property('isPublic', true)
             expect(_video.owner.toJSON()).to.equal(adminUser.id)
           })
 
@@ -809,31 +810,31 @@ describe('LOGIC', () => {
       })
 
       it('NOK - should thrown an error when videos = ""', async () => {
-        await expect(logic.uploadVideo("", adminUser.id)).to.be.rejected
+        await expect(logic.uploadVideos("", adminUser.id)).to.be.rejected
       })
 
       it('NOK - should thrown an error when videos = {}', async () => {
-        await expect(logic.uploadVideo({}, adminUser.id)).to.be.rejected
+        await expect(logic.uploadVideos({}, adminUser.id)).to.be.rejected
       })
 
       it('NOK - should thrown an error when loggedInUserId is 3 chars long', async () => {
-        await expect(logic.uploadVideo(videos, adminUser.id.slice(0, 3))).to.be.rejected
+        await expect(logic.uploadVideos(videos, adminUser.id.slice(0, 3))).to.be.rejected
       })
 
       it('NOK - should thrown an error when loggedInUserId = ""', async () => {
-        await expect(logic.uploadVideo(videos, "")).to.be.rejected
+        await expect(logic.uploadVideos(videos, "")).to.be.rejected
       })
 
       it('NOK - should thrown an error when loggedInUserId = []', async () => {
-        await expect(logic.uploadVideo(videos, [])).to.be.rejected
+        await expect(logic.uploadVideos(videos, [])).to.be.rejected
       })
 
       it('NOK - should thrown an error when loggedInUserId = {}', async () => {
-        await expect(logic.uploadVideo(videos, {})).to.be.rejected
+        await expect(logic.uploadVideos(videos, {})).to.be.rejected
       })
 
       it('NOK - should thrown an error when loggedInUserId user not found', async () => {
-        await expect(logic.uploadVideo(videos, fakeId)).to.be.rejectedWith(Error, 'logged_in_user_not_found')
+        await expect(logic.uploadVideos(videos, fakeId)).to.be.rejectedWith(Error, 'logged_in_user_not_found')
       })
 
     })
@@ -883,7 +884,7 @@ describe('LOGIC', () => {
             expect(_video).to.have.property('url')
             expect(videos.some(({ url }) => url === _video.url)).to.be.true
             expect(_video).to.have.property('category', 'salsa')
-            expect(_video).to.have.property('isPublic', false)
+            expect(_video).to.have.property('isPublic', true)
             expect(_video.owner.toJSON()).to.equal(adminUser.id)
           })
 

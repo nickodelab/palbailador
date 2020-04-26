@@ -1,12 +1,21 @@
 'use strict'
 
 const jwt = require('jsonwebtoken')
+const validator = require('validator')
 
 const tokenHelper = {
   jwtSecret: null,
 
+  /**
+   * Creates the token with the userId in the sub
+   *
+   * @param {String} userId
+   * @returns {String} - token
+   * @throws {Error} on non valid userId
+   */
   createToken (userId) {
-    return jwt.sign({ sub: userId }, this.jwtSecret, { expiresIn: '48h' })
+    if (!validator.isAlphanumeric(userId)) throw Error('not valid userId')
+    return jwt.sign({ sub: userId }, this.jwtSecret, { expiresIn: '7d' })
   },
 
   verifyToken (token) {
@@ -18,15 +27,18 @@ const tokenHelper = {
   },
 
   tokenVerifierMiddleware (req, res, next) {
-    const {
-      headers: { authorization }
-    } = req
-
-    const token = authorization.substring(7)
-
     try {
-      const userId = this.verifyToken(token)
-      req.userId = userId
+      const {
+        headers: { authorization }
+      } = req
+
+      const token = authorization.substring(7)
+      console.log('token', token)
+
+      const loggedInUserId = this.verifyToken(token)
+      console.log('loggedInUserId', loggedInUserId)
+
+      req.loggedInUserId = loggedInUserId
     } catch ({ message }) {
       return res.status(401).json({ error: message })
     }

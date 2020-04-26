@@ -15,7 +15,7 @@ const {
 
   // videos
   newVideos,
-  listVideos,
+  getMyVideos,
   updateVideo,
 
   // groups
@@ -26,13 +26,9 @@ const {
   getMyGroups
 } = require('./routes')
 
-// const {
-//   env: { DB_URL, PORT, JWT_SECRET }
-// } = process
-
-const PORT = 8080;
-const HOST = '0.0.0.0';
-const DB_URL = 'mongodb://localhost:27017/palbailador'
+const {
+  env: { DB_URL, PORT, JWT_SECRET }
+} = process
 
 const mongooseOpts = {
   useNewUrlParser: true,
@@ -44,8 +40,9 @@ const mongooseOpts = {
 mongoose
   .connect(DB_URL, mongooseOpts)
   .then(() => {
-    // tokenHelper.jwtSecret = JWT_SECRET
-    tokenHelper.jwtSecret = 'Mun$zrx1P%OAQVT6V7ECX1sJf*fYRpReu4Pnp0tslieGU1b^vn2^QC@VZ!aN!@2&aquAE093z%eSp^hdB^e3GLx!eyAJjJbpH&I'
+    console.log('MongoDB Connected!')
+
+    tokenHelper.jwtSecret = JWT_SECRET
 
     const { tokenVerifierMiddleware } = tokenHelper
 
@@ -60,37 +57,46 @@ mongoose
     router.post('/user/login', jsonBodyParser, authUser)
 
     // videos
-    router.post('/video/new', newVideos)
-    router.get('/video/list', listVideos)
-    router.put('/video/update', jsonBodyParser, updateVideo)
+    router.post(
+      '/video/new',
+      tokenVerifierMiddleware,
+      jsonBodyParser,
+      newVideos
+    )
+    router.get('/video/list', tokenVerifierMiddleware, getMyVideos)
+    router.put(
+      '/video/update/:videoId',
+      tokenVerifierMiddleware,
+      jsonBodyParser,
+      updateVideo
+    )
 
     // groups
-    router.post(
-      '/group/add-user/:groupId',
-      [tokenVerifierMiddleware, jsonBodyParser],
-      addUser
-    )
-    router.post(
-      '/group/new',
-      [tokenVerifierMiddleware, jsonBodyParser],
-      newGroup
-    )
+    router.post('/group/new', tokenVerifierMiddleware, jsonBodyParser, newGroup)
     router.delete(
       '/group/delete/:groupId',
       tokenVerifierMiddleware,
       deleteGroup
     )
+    router.post(
+      '/group/add-user/:userId/:groupId',
+      tokenVerifierMiddleware,
+      addUser
+    )
+    router.post(
+      '/group/add-video/:videoId/:groupId',
+      tokenVerifierMiddleware,
+      addVideo
+    )
     router.post('/group/my', tokenVerifierMiddleware, getMyGroups)
-    router.post('/group/add-video/:groupId', jsonBodyParser, addVideo)
 
     // config
     app.use('/api', router)
 
     router.get('*', (req, res) => res.status(404).json({ status: 'not found' }))
 
-    // app.listen(PORT, () => console.log(`server running on http://localhost:${PORT}`))
-    app.listen(PORT, HOST)
-
-    console.log(`Running on http://${HOST}:${PORT}`)
+    app.listen(PORT, () =>
+      console.log(`server running on http://localhost:${PORT}`)
+    )
   })
-  .catch((error) => console.log('ERROR!', error))
+  .catch(error => console.log('ERROR!', error))

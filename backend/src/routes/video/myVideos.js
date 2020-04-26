@@ -2,8 +2,9 @@ const logic = require('../../logic')
 
 module.exports = async (req, res) => {
   try {
-    const response = await logic.getMyVideos()
-    res.json(response)
+    const { loggedInUserId } = req
+    const videos = await logic.getMyVideos(loggedInUserId)
+    res.json(videos)
   } catch ({ message }) {
     res.status(403).send({ error: message })
   }

@@ -34,7 +34,7 @@ const Video = new Schema(
     isPublic: {
       type: Boolean,
       required: true,
-      default: false
+      default: true
     }
   },
   options

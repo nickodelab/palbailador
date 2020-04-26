@@ -1,17 +1,13 @@
 const logic = require('../../logic')
 
-// const { tokenHelper: { createToken }} = require('../../middlewares')
-
 module.exports = async (req, res) => {
-  const {
-    params: { groupId },
-    body: { userId }
-  } = req
-
   try {
-    const response = await logic.addUserToGroup(groupId, userId, req.userId)
-    // const token = createToken(user.id)
-    res.json(response)
+    const {
+      params: { userId, groupId },
+      loggedInUserId
+    } = req
+    await logic.addUserToGroup(groupId, userId, loggedInUserId)
+    res.json({ message: 'User added to the group' })
   } catch ({ message }) {
     res.status(403).send({ error: message })
   }

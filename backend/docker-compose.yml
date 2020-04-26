@@ -1,22 +1,31 @@
 version: "3"
 services:
+  # the name of your services (doesn't matter the name)
   app:
-    container_name: serverPB
+    container_name: palbailador
+    # if a fail happen restart automatically
     restart: always
+    # we'll build our image from our Dockerfile
+    # with the '.' it will look for the Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     build: .
+    command: npm start
     ports:
-      - "8080:4000"
+      # port 80 in our local machine map to port 3000 in the container
+      - "80:3000"
     links:
       - mongo
-    depends_on:
-      - mongo
-    volumes:
-      - /app/backend/node_modules
-      - .:/app/backend:delegated
+    environment:
+      - PORT=${PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - DB_URL=${DB_URL}
+      - DB_URL_TEST=${DB_URL_TEST}
   mongo:
     container_name: mongo
-    image: mongo:latest
-    volumes:
-      - "/Users/${USER}/data:/data/db"
+    # we won't be using an image
+    # we'll pull the image from docker hub
+    image: mongo
     ports:
       - "27017:27017"

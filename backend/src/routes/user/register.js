@@ -4,7 +4,6 @@ const logic = require('../../logic')
 
 module.exports = async (req, res) => {
   try {
-    console.log('asdcasdcasdc')
     const { id } = await logic.registerUser(req.body)
     res.json({ id })
   } catch ({ message }) {

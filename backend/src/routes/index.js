@@ -7,15 +7,13 @@ module.exports = {
 
   // videos
   newVideos: require('./video/new'),
-  listVideos: require('./video/list'),
+  getMyVideos: require('./video/myVideos'),
   updateVideo: require('./video/update'),
 
   // groups
   newGroup: require('./group/new'),
   deleteGroup: require('./group/delete'),
   getMyGroups: require('./group/my'),
-
-  // users
   addUser: require('./group/addUser'),
   addVideo: require('./group/addVideo')
 }
