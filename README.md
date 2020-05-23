@@ -2,4 +2,4 @@
 
 palBailador is all you need to learn and develop you as a good social dancer.
 
-# in progress
+### in progress - be sure to come back in a few weeks
