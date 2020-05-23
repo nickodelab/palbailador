@@ -1,5 +1,5 @@
 
-import React from 'react' 
+import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = {
@@ -12,11 +12,9 @@ const styles = {
 }
 
 const Alert = ({ message, level, classes }) => <>
-
-    <section className={classes[level]}>      
+    <section className={classes[level]}>
         {message}
     </section>
-
 </>
-  
+
 export default withStyles(styles)(Alert)

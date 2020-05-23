@@ -1,118 +1,119 @@
 
-import React from 'react'
-import { 
-		Button,
-		CssBaseline,
-		TextField,
-		Grid,
-		Typography,
-		Container,
-		Box
+import React, { useEffect } from 'react'
+import {
+	Avatar,
+	Button,
+	TextField,
+	Box,
+	Grid,
+	Typography,
+	FormControlLabel,
+	Checkbox,
+	makeStyles
 } from '@material-ui/core/'
+import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons/'
+import { NPLink } from '../shared'
 
-import { withRouter, Link } from 'react-router-dom'
-import { withStyles } from '@material-ui/core/styles'
-import { connect } from 'react-redux'
+import Copyright from '../shared/Copyright'
 
-import MobileMenu from '../layouts/MobileMenu'
-import { logInUser } from '../../redux/actions/user'
-import Alert from '../shared/Alert'
-
-const styles = (theme) => ({
-	'@global': {
-		body: {
-			backgroundColor: theme.palette.common.white,
-		},
+const useStyles = makeStyles((theme) => ({
+	root: {
+		height: '100vh',
 	},
 	paper: {
-		marginTop: theme.spacing(8),
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
+		margin: theme.spacing(8, 4),
+		...theme.mixins.flexy('column wrap', 'center', 'center')
 	},
 	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
+		margin: theme.spacing(2),
+		backgroundColor: theme.palette.primary.main,
 	},
 	form: {
-		width: '100%', // Fix IE 11 issue.
-		marginTop: theme.spacing(3),
+		width: '100%',
+		marginTop: theme.spacing(1),
 	},
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 	},
-})
-
-const Login = ({ classes, logInUser, error }) => {
-
-	const handleLogin = (event) => {
-		event.preventDefault()
-		const email = event.target.email.value
-		const password = event.target.password.value
-		logInUser({ email, password })
+	wrapper: {
+		overflow: 'hidden'
+	},
+	video: {
+		height: '100%',
+		width: '177.77777778vh',
+		minWidth: '100%',
+	},
+	body: {
+		overflowY: 'hidden',
+		overflowX: 'hidden'
 	}
+}))
 
-	return <>
-		<MobileMenu />
-		<Container component="main" maxWidth="xs">
-			<CssBaseline />
-			<div className={classes.paper}>
-				<Typography component="h1" variant="h5">
-					Registro
-				</Typography>
-				<form 
-					onSubmit={handleLogin} 
-					className={classes.form} 
-					noValidate
-				>
-					<Grid container spacing={2}>
-						<Grid item xs={12}>
-							<TextField
-								variant="outlined"
-								required
-								fullWidth
-								label="Email"
-								name="email"
-								autoComplete="email"
-								autoFocus
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								variant="outlined"
-								required
-								fullWidth
-								name="password"
-								label="Password"
-								type="password"
-								autoComplete="current-password"
-							/>
-						</Grid>
-					</Grid>
-					<Button
-						type="submit"
-						fullWidth
-						variant="contained"
-						color="primary"
-						className={classes.submit}
-					>
-						Identificarse
-					</Button>
-					<Grid container justify="flex-end">
-						<Grid item>
-							<Link to="/register" variant="body2">
-								¿No tienes cuenta? Regístrate
-							</Link>
-						</Grid>
-					</Grid>
-				</form>
-			</div>
+const Login = () => {
+	const classes = useStyles()
 
-			{error && <Alert level='error' message={error} />}
-		</Container>
-	</>
+	useEffect(() => { document.body.className = classes.body }, [classes.body])
+
+	return <div className={classes.paper}>
+		<Avatar className={classes.avatar}>
+			<LockOutlinedIcon />
+		</Avatar>
+		<Typography component="h1" variant="h5">
+			Login
+        </Typography>
+		<form className={classes.form} noValidate>
+			<TextField
+				variant="outlined"
+				margin="normal"
+				required
+				fullWidth
+				id="email"
+				label="Email Address"
+				name="email"
+				autoComplete="email"
+				autoFocus
+			/>
+			<TextField
+				variant="outlined"
+				margin="normal"
+				required
+				fullWidth
+				name="password"
+				label="Password"
+				type="password"
+				id="password"
+				autoComplete="current-password"
+			/>
+			<FormControlLabel
+				control={<Checkbox value="remember" color="primary" />}
+				label="Remember me"
+			/>
+			<Button
+				type="submit"
+				fullWidth
+				variant="contained"
+				color="primary"
+				className={classes.submit}
+			>
+				Sign In
+            			</Button>
+			<Grid container>
+				<Grid item xs>
+					<NPLink to="#">
+						Forgot password?
+                	</NPLink>
+				</Grid>
+				<Grid item>
+					<NPLink routeName="register">
+						{"Don't have an account? Sign Up"}
+					</NPLink>
+				</Grid>
+			</Grid>
+			<Box mt={5}>
+				<Copyright />
+			</Box>
+		</form>
+	</div>
 }
 
-
-const mapStateToProps = ({ error, response }) => ({ response })
-export default withStyles(styles)(connect(mapStateToProps, { logInUser })(withRouter(Login)))
+export default Login
