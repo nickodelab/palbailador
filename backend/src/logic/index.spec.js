@@ -20,16 +20,12 @@ const mongooseOpts = {
   useFindAndModify: false
 }
 
-console.log('DB_URL_TEST', DB_URL_TEST)
-console.log('JWT_SECRET', JWT_SECRET)
-// random password to encrypt the passwords
 tokenHelper.jwtSecret = JWT_SECRET
 
 describe('LOGIC', () => {
   before(async () => { 
     try {
       const connection = await mongoose.connect(DB_URL_TEST, mongooseOpts)
-      console.log('connection', connection)
       return connection
     } catch (error) {
         console.log('error', error)
