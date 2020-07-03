@@ -14,9 +14,9 @@ const App = ({ isUserLoggedIn }) => <>
     <ThemeProvider theme={theme}>
         <CssBaseline />
         <Switch>
-            {routing.getRoutes().map(({ url, exact, Component, Layout }, key) =>
+            {routing.getRoutes().map(({ path, exact, Component, Layout }, key) =>
                 <Route
-                    path={url}
+                    path={path}
                     exact={exact}
                     render={() => <Layout Component={Component} />}
                     key={key}

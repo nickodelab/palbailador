@@ -1,19 +1,14 @@
 
 import React from 'react'
-import { Link as RouterLink } from 'react-router-dom'
-import Link from '@material-ui/core/Link'
+import { Link } from 'react-router-dom'
 
 import thunRouting from '../../utils/routing'
 
-const NPLink = ({ to, children, routeName }) => <>
+const NPLink = ({ to, routeName, text }) => <>
     <Link
-        component={React.forwardRef((props, ref) => <RouterLink
-            innerRef={ref}
-            href={routeName ? thunRouting.getPathByRouteName(routeName) : to}
-            {...props}
-        />)}
+        to={routeName ? thunRouting.getPathByRouteName(routeName) : to}
     >
-        {children}
+        {text}
     </Link>
 </>
 

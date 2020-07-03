@@ -12,14 +12,12 @@ import {
 	makeStyles
 } from '@material-ui/core/'
 import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons/'
-import { NPLink } from '../shared'
 
+import { NPLink } from '../shared'
 import Copyright from '../shared/Copyright'
+import routing from '../../utils/routing'
 
 const useStyles = makeStyles((theme) => ({
-	root: {
-		height: '100vh',
-	},
 	paper: {
 		margin: theme.spacing(8, 4),
 		...theme.mixins.flexy('column wrap', 'center', 'center')
@@ -34,25 +32,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 	submit: {
 		margin: theme.spacing(3, 0, 2),
-	},
-	wrapper: {
-		overflow: 'hidden'
-	},
-	video: {
-		height: '100%',
-		width: '177.77777778vh',
-		minWidth: '100%',
-	},
-	body: {
-		overflowY: 'hidden',
-		overflowX: 'hidden'
 	}
 }))
 
 const Login = () => {
 	const classes = useStyles()
-
-	useEffect(() => { document.body.className = classes.body }, [classes.body])
 
 	return <div className={classes.paper}>
 		<Avatar className={classes.avatar}>
@@ -67,7 +51,6 @@ const Login = () => {
 				margin="normal"
 				required
 				fullWidth
-				id="email"
 				label="Email Address"
 				name="email"
 				autoComplete="email"
@@ -96,17 +79,15 @@ const Login = () => {
 				className={classes.submit}
 			>
 				Sign In
-            			</Button>
+            </Button>
 			<Grid container>
 				<Grid item xs>
-					<NPLink to="#">
-						Forgot password?
-                	</NPLink>
 				</Grid>
 				<Grid item>
-					<NPLink routeName="register">
-						{"Don't have an account? Sign Up"}
-					</NPLink>
+					<NPLink
+						routeName="register"
+						text="Don't have an account? Sign Up"
+					/>
 				</Grid>
 			</Grid>
 			<Box mt={5}>

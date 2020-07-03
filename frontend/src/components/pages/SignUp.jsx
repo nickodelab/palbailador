@@ -10,15 +10,11 @@ import {
   makeStyles
 } from '@material-ui/core/'
 import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons/'
-import { Link } from 'react-router-dom'
 
-import videoBackground from '../../img/backgroundLogin.mp4'
+import { NPLink } from '../shared'
 import Copyright from '../shared/Copyright'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100vh',
-  },
   paper: {
     margin: theme.spacing(8, 4),
     ...theme.mixins.flexy('column wrap', 'center', 'center')
@@ -34,24 +30,10 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  wrapper: {
-    overflow: 'hidden'
-  },
-  video: {
-    height: '100%',
-    width: '177.77777778vh',
-    minWidth: '100%',
-  },
-  body: {
-    overflowY: 'hidden',
-    overflowX: 'hidden'
-  }
 }))
 
 const SignUp = () => {
   const classes = useStyles()
-
-  useEffect(() => { document.body.className = classes.body }, [classes.body])
 
   return (
     <div className={classes.paper}>
@@ -60,14 +42,13 @@ const SignUp = () => {
       </Avatar>
       <Typography component="h1" variant="h5">
         Sign up
-          </Typography>
+      </Typography>
       <form className={classes.form} noValidate>
         <TextField
           variant="outlined"
           margin="normal"
           required
           fullWidth
-          id="email"
           label="Email Address"
           name="email"
           autoComplete="email"
@@ -81,7 +62,6 @@ const SignUp = () => {
           name="password"
           label="Password"
           type="password"
-          id="password"
           autoComplete="current-password"
         />
         <TextField
@@ -92,7 +72,6 @@ const SignUp = () => {
           name="password"
           label="Password confirmation"
           type="password"
-          id="password"
           autoComplete="current-password"
         />
         <TextField
@@ -100,7 +79,6 @@ const SignUp = () => {
           margin="normal"
           required
           fullWidth
-          id="email"
           label="Nickname"
           name="email"
           autoComplete="email"
@@ -115,13 +93,11 @@ const SignUp = () => {
           Sign Up
             </Button>
         <Grid container>
-          <Grid item xs>
-
-          </Grid>
           <Grid item>
-            <Link to="/login">
-              {"Already have an account? Login"}
-            </Link>
+            <NPLink
+              routeName="login"
+              text="Already have an account? Login"
+            />
           </Grid>
         </Grid>
         <Box mt={5}>

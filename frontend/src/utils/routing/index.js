@@ -21,9 +21,9 @@ const routing = {
     getPathByRouteName(routeName) {
         if (typeof routeName !== 'string') throw TypeError(`routeName is not a string`)
 
-        console.log('this.__routes', this.__routes)
         const route = this.__routes.find(({ name }) => name === routeName)
         if (!route) throw Error(`${routeName} not exists`)
+
         return route.path
     },
 

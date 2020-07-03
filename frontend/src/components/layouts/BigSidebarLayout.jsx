@@ -1,41 +1,12 @@
 
 import React, { useEffect } from 'react'
-import {
-	Avatar,
-	Button,
-	TextField,
-	Link,
-	Paper,
-	Box,
-	Grid,
-	Typography,
-	FormControlLabel,
-	Checkbox,
-	withStyles,
-} from '@material-ui/core/'
-import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons/'
+import { Paper, Grid, withStyles } from '@material-ui/core/'
 
 import videoBackground from '../../img/backgroundLogin.mp4'
-import Copyright from '../shared/Copyright'
 
 const styles = (theme) => ({
 	root: {
 		height: '100vh',
-	},
-	paper: {
-		margin: theme.spacing(8, 4),
-		...theme.mixins.flexy('column wrap', 'center', 'center')
-	},
-	avatar: {
-		margin: theme.spacing(2),
-		backgroundColor: theme.palette.primary.main,
-	},
-	form: {
-		width: '100%',
-		marginTop: theme.spacing(1),
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2),
 	},
 	wrapper: {
 		overflow: 'hidden'
