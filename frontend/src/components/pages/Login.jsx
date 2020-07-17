@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react'
+import React, { useState } from 'react';
 import {
 	Avatar,
 	Button,
@@ -10,18 +10,17 @@ import {
 	FormControlLabel,
 	Checkbox,
 	makeStyles
-} from '@material-ui/core/'
-import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons/'
+} from '@material-ui/core/';
+import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons/';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
-import { NPLink } from '../shared'
-import Copyright from '../shared/Copyright'
-import routing from '../../utils/routing'
+import validate from '../../utils/validate';
+import { logInUser } from '../../redux/actions/user';
+import { setAlert } from '../../redux/actions/ui';
+import { NPLink, Copyright, Alert } from '../shared';
 
-const useStyles = makeStyles((theme) => ({
-	paper: {
-		margin: theme.spacing(8, 4),
-		...theme.mixins.flexy('column wrap', 'center', 'center')
-	},
+const useMyStyles = makeStyles((theme) => ({
 	avatar: {
 		margin: theme.spacing(2),
 		backgroundColor: theme.palette.primary.main,
@@ -32,13 +31,25 @@ const useStyles = makeStyles((theme) => ({
 	},
 	submit: {
 		margin: theme.spacing(3, 0, 2),
-	}
-}))
+	},
+}));
 
-const Login = () => {
-	const classes = useStyles()
+const Login = ({ logInUser, alert, setAlert }) => {
+	const classes = useMyStyles();
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
 
-	return <div className={classes.paper}>
+	const submitForm = event => {
+		try {
+			event.preventDefault();
+			validate.loginUser({ email, password });
+			logInUser({ email, password });
+		} catch ({ message }) {
+			setAlert({ message, level: 'error' }, 'logInUser');
+		}
+	};
+
+	return <>
 		<Avatar className={classes.avatar}>
 			<LockOutlinedIcon />
 		</Avatar>
@@ -46,6 +57,7 @@ const Login = () => {
 			Login
         </Typography>
 		<form className={classes.form} noValidate>
+			{alert && <Alert level={alert.level}>{alert.message}</Alert>}
 			<TextField
 				variant="outlined"
 				margin="normal"
@@ -55,6 +67,7 @@ const Login = () => {
 				name="email"
 				autoComplete="email"
 				autoFocus
+				onChange={e => setEmail(e.target.value)}
 			/>
 			<TextField
 				variant="outlined"
@@ -66,6 +79,7 @@ const Login = () => {
 				type="password"
 				id="password"
 				autoComplete="current-password"
+				onChange={e => setPassword(e.target.value)}
 			/>
 			<FormControlLabel
 				control={<Checkbox value="remember" color="primary" />}
@@ -77,8 +91,9 @@ const Login = () => {
 				variant="contained"
 				color="primary"
 				className={classes.submit}
+				onClick={submitForm}
 			>
-				Sign In
+				Login
             </Button>
 			<Grid container>
 				<Grid item xs>
@@ -94,7 +109,8 @@ const Login = () => {
 				<Copyright />
 			</Box>
 		</form>
-	</div>
-}
+	</>
+};
 
-export default Login
+const mapStateToProps = ({ ui: { alert, redirect } }) => ({ alert: alert || redirect.alert });
+export default connect(mapStateToProps, { logInUser, setAlert })(withRouter(Login));

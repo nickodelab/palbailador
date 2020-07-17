@@ -1,44 +1,39 @@
-import axios from 'axios'
+import axios from 'axios';
 
-import { ENDPOINTS } from './endpoints'
-import {
-	API_REQUEST,
-	apiSuccess,
-	setError,
-	setClearError
-} from '../../actions/api'
+import { ENDPOINTS } from './endpoints';
+import { REQUEST, apiSuccess } from '../../actions/api';
 
-const { REACT_APP_API_URL } = process.env
+import { setAlert } from '../../actions/ui';
+
+const { REACT_APP_API_HOST } = process.env;
 
 export const apiMdl = ({ getState, dispatch }) => next => async action => {
+	next(action);
 
-	next(action)
-
-	if (action.type.includes(API_REQUEST)) {
-		const { method, endPoint, params } = action.payload.meta
+	if (action.type.includes(REQUEST)) {
+		const { method, actionName } = action.payload.meta;
 
 		try {
-			const url = REACT_APP_API_URL + ENDPOINTS[endPoint]
+			const { loggedInUser: { token } } = getState();
+			const url = REACT_APP_API_HOST + ENDPOINTS[actionName];
 
-			console.log(action.payload.data)
+			const headers = token ?
+				{ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` } :
+				{ 'Content-Type': 'application/json' };
 
-			const { data } = await axios({
+			const response = await axios({
 				method,
 				url,
 				data: action.payload.data,
-				headers: {
-					'Content-Type': 'multipart/form-data',
-					// 'access-token': config.apiKey,
-					// 'auth': token
-				},
-				// params
-			})
+				headers
+			});
 
-			dispatch(apiSuccess(data, endPoint))
-			dispatch(setClearError(endPoint))
+			console.log('response', response)
+			console.log('response.data', response.data)
 
+			dispatch(apiSuccess(response.data, actionName));
 		} catch (axiosError) {
-			dispatch(setError(axiosError.response.data.error, endPoint))
+			dispatch(setAlert({ message: axiosError.response.data.error, level: 'error' }, actionName));
 		}
 	}
 }

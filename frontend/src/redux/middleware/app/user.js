@@ -1,58 +1,48 @@
+import {
+    SUCCESS,
+    apiRequest
+} from '../../actions/api';
 
-import { 
-    API_SUCCESS, 
-    apiRequest,
-    setResponse
-} from '../../actions/api'
+import {
+    setAlert,
+    setRedirect,
+    setClearAlert,
+} from '../../actions/ui';
 
-import { 
-    REGISTER_USER, 
-    LOG_IN_USER, 
-    FILL_USER_VIDEOS, 
-    setToken, 
-    setUserVideos 
-} from '../../actions/user'
+import {
+    LOGIN,
+    REGISTER,
+    setUser,
+    SET_USER
+} from '../../actions/user';
 
-export const userMiddleware = ({ getState, dispatch }) => next => action => {
+export const userMiddleware = ({ dispatch }) => next => action => {
     next(action)
 
     switch (action.type) {
+        case REGISTER:
+            dispatch(setClearAlert(REGISTER));
+            dispatch(apiRequest(action.payload, 'POST', REGISTER));
+            break;
 
-        case REGISTER_USER:
-            dispatch(apiRequest(action.payload, 'POST', REGISTER_USER))
-            break
+        case LOGIN:
+            dispatch(setClearAlert(LOGIN));
+            dispatch(apiRequest(action.payload, 'POST', LOGIN));
+            break;
 
-        case LOG_IN_USER:
-            dispatch(apiRequest(action.payload, 'POST', LOG_IN_USER))
-            break
+        case `${REGISTER} - ${SUCCESS}`: {
+            dispatch(setRedirect('login', { message: 'user successfully registered', level: 'success' }));
+            break;
+        }
 
-        case FILL_USER_VIDEOS:
-            dispatch(apiRequest(action.payload, 'GET', FILL_USER_VIDEOS))
-            break
+        case `${LOGIN} - ${SUCCESS}`: {
+            const userLogggedIn = action.payload;
+            sessionStorage.setItem('token', userLogggedIn.token);
 
-        case `${LOG_IN_USER} ${API_SUCCESS}`:
-            var { data, meta: { entity } } = action.payload
-
-            if (entity === LOG_IN_USER) {
-                dispatch(setToken(data.token))
-            }
-            break
-
-        case `${FILL_USER_VIDEOS} ${API_SUCCESS}`:
-            var { data, meta: { entity } } = action.payload
-
-            if (entity === FILL_USER_VIDEOS) {
-                dispatch(setUserVideos(data))
-            }
-            break
-
-        case `${REGISTER_USER} ${API_SUCCESS}`:
-            var { data, meta: { entity } } = action.payload
-
-            if (entity === REGISTER_USER) {
-                dispatch(setResponse(data))
-            }
-            break
+            dispatch(setUser(userLogggedIn, SET_USER));
+            dispatch(setRedirect('home', { message: 'user successfully logged', level: 'success' }));
+            break;
+        }
 
         default:
     }

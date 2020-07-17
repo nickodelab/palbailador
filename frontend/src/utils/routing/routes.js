@@ -1,18 +1,20 @@
 
 // #layouts
-import BigSidebarLayout from '../../components/layouts/BigSidebarLayout'
-import HomeLayout from '../../components/layouts/HomeLayout'
+import BigSidebarLayout from '../../components/layouts/BigSidebarLayout';
+import MainLayout from '../../components/layouts/MainLayout';
 
 // #pages
-import SignUp from '../../components/pages/SignUp'
-import Login from '../../components/pages/Login'
-import Home from '../../components/pages/Home'
+import SignUp from '../../components/pages/SignUp';
+import Login from '../../components/pages/Login';
+import Home from '../../components/pages/Home';
+import Upload from '../../components/pages/Upload';
 
 const URLS = [
     { name: 'register', url: '/register' },
     { name: 'login', url: '/login' },
     { name: 'home', url: '/' },
-]
+    { name: 'upload', url: '/upload' },
+];
 
 const routes = [
     {
@@ -21,7 +23,7 @@ const routes = [
         Component: SignUp,
         Layout: BigSidebarLayout,
         exact: true,
-        isPublic: true
+        isPublic: true,
     },
     {
         path: URLS.find(({ name }) => name === 'login').url,
@@ -35,10 +37,18 @@ const routes = [
         path: URLS.find(({ name }) => name === 'home').url,
         name: 'home',
         Component: Home,
-        Layout: HomeLayout,
+        Layout: MainLayout,
+        exact: true,
+        isPublic: false
+    },
+    {
+        path: URLS.find(({ name }) => name === 'upload').url,
+        name: 'upload',
+        Component: Upload,
+        Layout: MainLayout,
         exact: true,
         isPublic: false
     }
-]
+];
 
-export default routes
+export default routes;

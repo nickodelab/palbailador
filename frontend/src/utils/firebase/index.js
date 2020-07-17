@@ -21,6 +21,8 @@ const firebase = {
     },
 
     uploadMultipleFiles(arrVideos) {
+        console.log('arrVideos', arrVideos);
+
         const result = arrVideos.map(async videoFile => {
             const url = await this.getVideoURL(videoFile)
             return { url }

@@ -21,8 +21,8 @@ const Video = new Schema(
 
     category: {
       type: String,
-      enum: ['salsa', 'bachata', 'kizomba', 'mambo', 'cubana', 'chacha'],
-      required: true
+      enum: ['rock', 'pop', 'jazz', 'blues', 'classical', 'punk', 'funk', 'metal', 'heavy'],
+      required: false
     },
 
     owner: {

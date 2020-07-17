@@ -1,23 +1,17 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
-import { errorReducer } from '../reducers/error'
-import { apiReducer } from '../reducers/api'
-import { uiReducer } from '../reducers/ui'
-import { userReducer } from '../reducers/user'
-import { settingsReducer } from '../reducers/settings'
-import { videoReducer } from '../reducers/video'
-import { RESET_APP } from '../actions/root'
+import { uiReducer } from '../reducers/ui';
+import { userReducer } from '../reducers/user';
+import { videosReducer } from '../reducers/videos';
+import { LOG_OUT } from '../actions/user';
 
 const appReducers = combineReducers({
-    error: errorReducer,
-    isMenuOpen: uiReducer,
+    ui: uiReducer,
     loggedInUser: userReducer,
-    response: apiReducer,
-    settings: settingsReducer,
-    videos: videoReducer
-})
+    videos: videosReducer,
+});
 
 export const rootReducer = (state, action) => {
-    if (action.type === RESET_APP) state = undefined
-    return appReducers(state, action)
-}
+    if (action.type === LOG_OUT) state = undefined;
+    return appReducers(state, action);
+};

@@ -12,6 +12,7 @@ const {
   // users
   registerUser,
   authUser,
+  getMyUser,
 
   // videos
   newVideos,
@@ -55,6 +56,7 @@ mongoose
     // user
     router.post('/user/new', jsonBodyParser, registerUser)
     router.post('/user/login', jsonBodyParser, authUser)
+    router.get('/user/me', tokenVerifierMiddleware, getMyUser)
 
     // videos
     router.post(

@@ -1,16 +1,27 @@
-export const UI_ENTITY = '[ui]'
+export const UI_ENTITY = '[UI]';
 
-export const SET_LOADER = `SET_LOADER`
-export const SET_MENU_OPEN = `${UI_ENTITY} SET_MENU_OPEN`
+export const SET_ALERT = `${UI_ENTITY} SET_ALERT`;
+export const SET_CLEAR_ALERT = `${UI_ENTITY} SET_CLEAR_ALERT`;
+export const SET_REDIRECT = `${UI_ENTITY} SET_REDIRECT`;
+export const SET_REDIRECT_DONE = `${UI_ENTITY} SET_REDIRECT_DONE`;
 
-export const setLoader = (state) => ({
-    type: SET_LOADER,
+export const setAlert = (errorObj, actionName) => ({
+    type: `${actionName} - ${SET_ALERT}`,
+    payload: errorObj,
+});
+
+export const setClearAlert = actionName => ({
+    type: `${actionName} - ${SET_CLEAR_ALERT}`,
+});
+
+export const setRedirect = (to, alert) => ({
+    type: `${SET_REDIRECT} - to: ${to}`,
     payload: {
-        data: state
-    }
-})
+        to,
+        alert
+    },
+});
 
-export const setMenuCollapse = collapse => ({
-    type: SET_MENU_OPEN,
-    payload: collapse
-})
+export const setRedirectDone = () => ({
+    type: SET_REDIRECT_DONE
+});

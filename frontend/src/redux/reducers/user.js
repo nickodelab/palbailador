@@ -1,31 +1,27 @@
 
-import { SET_SETTINGS, SET_TOKEN, SET_USER_VIDEOS } from '../actions/user' 
+import { SET_USER } from '../actions/user';
 
 const userReducerInitialState = {
-    videos: false,
-    token: sessionStorage.token
-}
+    id: false,
+    groups: false,
+    nickname: false,
+    email: false,
+    token: sessionStorage.token,
+};
 
-export function userReducer(state = userReducerInitialState, action) { 
-    
+export function userReducer(state = userReducerInitialState, action) {
+
     switch (action.type) {
 
-        case SET_TOKEN:
+        case SET_USER:
             return {
                 ...state,
-                token: action.payload
-            }
+                ...action.payload
+            };
 
-        case SET_USER_VIDEOS:
-            return {
-                ...state,
-                videos: action.payload
-            }
-    
         default:
-            break
+            break;
     }
-    
-    return state
 
-} 
+    return state;
+};

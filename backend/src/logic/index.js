@@ -68,6 +68,20 @@ const logic = {
     return this.normalize({ ...user, token })
   },
   /**
+   * Get the logged in user
+   * @param {String} loggedInUserId
+   * @returns {Object} - with all user's info
+   * @throws {Error} - on non valid userId or not found user
+   */
+  getMyUser: async function (loggedInUserId) {
+    if (!loggedInUserId) throw Error('logged_in_user_not_found')
+
+    const userLoggedIn = await User.findById(loggedInUserId).lean()
+    if (!userLoggedIn) throw Error('logged_in_user_not_found')
+
+    return this.normalize(userLoggedIn)
+  },
+  /**
    * Save all videos in the videos param in the database
    *
    * @param {Array} videos - array of object = video

@@ -1,13 +1,48 @@
+import {
+    SET_ALERT,
+    SET_CLEAR_ALERT,
+    SET_REDIRECT,
+    SET_REDIRECT_DONE,
+} from '../actions/ui';
 
-import { SET_MENU_OPEN } from '../actions/ui' 
+const uiReducerInitialState = {
+    alert: false,
+    redirect: {
+        to: false,
+        alert: false,
+    },
+};
 
+export function uiReducer(state = uiReducerInitialState, action) {
 
-export function uiReducer(state = false, action) { 
-    
-    if (action.type === SET_MENU_OPEN) {
-			return action.payload
-    }
-    
-    return state
+    if (action.type.includes(SET_ALERT))
+        return {
+            ...state,
+            alert: action.payload,
+        };
 
-} 
+    if (action.type.includes(SET_CLEAR_ALERT))
+        return {
+            ...state,
+            alert: uiReducerInitialState.alert,
+        };
+
+    if (action.type.includes(SET_REDIRECT))
+        return {
+            ...state,
+            redirect: {
+                ...action.payload
+            },
+        };
+
+    if (action.type === SET_REDIRECT_DONE)
+        return {
+            ...state,
+            redirect: {
+                ...state.redirect
+            },
+        };
+
+    return state;
+
+};

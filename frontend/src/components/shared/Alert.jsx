@@ -1,20 +1,26 @@
 
-import React from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import React from 'react';
+import { Grow, Snackbar, withStyles } from '@material-ui/core/';
+import { Alert as MuiAlert } from '@material-ui/lab/';
 
-const styles = {
-    error: {
-        backgroundColor: 'red'
+const styles = theme => ({
+    alert: {
+        // margin: theme.spacing(2),
     },
-    success: {
-        backgroundColor: 'green'
+    ok: {
+        backgroundColor: theme.palette.primary.main,
     }
-}
+});
 
-const Alert = ({ message, level, classes }) => <>
-    <section className={classes[level]}>
-        {message}
-    </section>
-</>
+const Alert = ({ level, children, classes, ...props }) => <>
+    <MuiAlert
+        classes={{ root: classes.alert, filledSuccess: classes.ok }}
+        severity={level}
+        variant="filled"
+        {...props}
+    >
+        {children}
+    </MuiAlert>
+</>;
 
-export default withStyles(styles)(Alert)
+export default withStyles(styles)(Alert);

@@ -9,9 +9,7 @@ yarn-error.log*
 yarn.lock
 package-lock.json
 
-
 frontend/src/utils/firebase/storage.js
-backend/src/services/firebase/storage.js
 frontend/src/components/shared/Thun/
 
 build/

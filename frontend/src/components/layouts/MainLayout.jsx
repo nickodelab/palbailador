@@ -1,22 +1,32 @@
+import React, { useEffect } from 'react';
+import { Paper, Grid, withStyles } from '@material-ui/core/';
+import { connect } from 'react-redux';
 
-import React from 'react'
-import clsx from 'clsx'
-import { withStyles } from '@material-ui/core'
+import backgrounds from '../../img/backgrounds';
 
-// layout elements
-import BottomIcons from './BottomIcons'
+const styles = theme => ({
+	leftSidebar: {
+		margin: theme.spacing(8, 4),
+		...theme.mixins.flexy('column wrap', 'center', 'center'),
+		height: '100vh'
+	},
+});
 
-const styles = (theme) => ({
-	mainContent: {
-		padding: theme.spacing(6, 2)
-	}
-})
+const MainLayout = ({ classes, Component }) => {
 
-const MainLayout = (Component) => withStyles(styles)((props) => <>
-	<main className={clsx(props.classes['mainContent'])}>
-		<Component {...props} />
-	</main>
-	<BottomIcons />
-</>)
-  
-export default (MainLayout)
+	console.log('<MainLayout />...');
+	return <>
+		<Grid container component="main" className={classes.root}>
+			<Grid item xs={4} component={Paper} elevation={24} square>
+				<div className={classes.leftSidebar}>
+
+				</div>
+			</Grid>
+			<Grid item xs={8}>
+				<Component />
+			</Grid>
+		</Grid>
+	</>
+};
+
+export default withStyles(styles)(MainLayout);

@@ -1,4 +1,4 @@
-import { videoMiddleware } from './video'
-import { userMiddleware } from './user'
+import { userMiddleware } from './user';
+import { videosMiddleware } from './videos';
 
-export const appMdl = [videoMiddleware, userMiddleware]
+export const appMdl = [userMiddleware, videosMiddleware];
